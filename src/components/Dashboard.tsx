@@ -1,11 +1,11 @@
-import React from 'react';
-import { StockAnalysis } from './StockAnalysis';
-import { SentimentFeedback } from './SentimentFeedback';
-import { AnalysisChart } from './AnalysisChart';
-import { TrendingStocks } from './TrendingStocks';
-import { RecentInsights } from './RecentInsights';
+import { StockAnalysis } from "./StockAnalysis";
+import { SentimentFeedback } from "./SentimentFeedback";
+import { AnalysisChart } from "./AnalysisChart";
+import { TrendingStocks } from "./TrendingStocks";
+import { RecentInsights } from "./RecentInsights";
 export const Dashboard = () => {
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-2xl font-bold text-gray-800">
           주식 인사이트 대시보드
@@ -33,5 +33,6 @@ export const Dashboard = () => {
         </div>
       </div>
       <RecentInsights />
-    </div>;
+    </div>
+  );
 };
