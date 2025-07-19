@@ -1,6 +1,16 @@
-import React from "react";
+import { useState } from "react";
+
 export const AnalysisChart = () => {
-  // 더미 데이터
+  // 일간, 월간, 연간 더미 데이터
+  const dailyData = [
+    { day: "월", score: 68 },
+    { day: "화", score: 72 },
+    { day: "수", score: 70 },
+    { day: "목", score: 74 },
+    { day: "금", score: 69 },
+    { day: "토", score: 65 },
+    { day: "일", score: 71 },
+  ];
   const monthlyData = [
     { month: "1월", score: 65 },
     { month: "2월", score: 59 },
@@ -10,21 +20,48 @@ export const AnalysisChart = () => {
     { month: "6월", score: 74 },
     { month: "7월", score: 78 },
   ];
-  const maxScore = Math.max(...monthlyData.map((d) => d.score));
-  const minScore = Math.min(...monthlyData.map((d) => d.score));
+  const yearlyData = [
+    { year: "2018", score: 55 },
+    { year: "2019", score: 62 },
+    { year: "2020", score: 70 },
+    { year: "2021", score: 80 },
+    { year: "2022", score: 75 },
+    { year: "2023", score: 85 },
+    { year: "2024", score: 90 },
+  ];
+
+  // 선택된 타입 상태: 'daily' | 'monthly' | 'yearly'
+  const [type, setType] = useState<"daily" | "monthly" | "yearly">("monthly");
+
+  // 타입에 따라 데이터 선택
+  let chartData: { label: string; score: number }[] = [];
+  let labelKey = "";
+  if (type === "daily") {
+    chartData = dailyData.map((d) => ({ label: d.day, score: d.score }));
+    labelKey = "day";
+  } else if (type === "monthly") {
+    chartData = monthlyData.map((d) => ({ label: d.month, score: d.score }));
+    labelKey = "month";
+  } else {
+    chartData = yearlyData.map((d) => ({ label: d.year, score: d.score }));
+    labelKey = "year";
+  }
+
+  const maxScore = Math.max(...chartData.map((d) => d.score));
+  const minScore = Math.min(...chartData.map((d) => d.score));
 
   // SVG 선형 그래프용 계산 (크기 소폭 축소)
   const width = 400;
   const height = 150;
   const padding = 28;
-  const points = monthlyData.map((item, i) => {
-    const x = padding + (i * (width - 2 * padding)) / (monthlyData.length - 1);
+  const points = chartData.map((item, i) => {
+    const x = padding + (i * (width - 2 * padding)) / (chartData.length - 1);
     // y축은 값이 클수록 위로 가야 하므로 반전
     const y =
       padding +
       ((maxScore - item.score) * (height - 2 * padding)) /
         (maxScore - minScore || 1);
-    return { x, y, value: item.score, month: item.month };
+    return { x, y, value: item.score, label: item.label };
   });
   const linePath = points
     .map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`)
@@ -37,13 +74,34 @@ export const AnalysisChart = () => {
           시장 인사이트 점수 추이
         </h3>
         <div className="flex space-x-2">
-          <button className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-md">
+          <button
+            className={`px-3 py-1 text-sm rounded-md ${
+              type === "daily"
+                ? "bg-blue-600 text-white"
+                : "bg-blue-50 text-blue-600"
+            }`}
+            onClick={() => setType("daily")}
+          >
             일간
           </button>
-          <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md">
+          <button
+            className={`px-3 py-1 text-sm rounded-md ${
+              type === "monthly"
+                ? "bg-blue-600 text-white"
+                : "bg-blue-50 text-blue-600"
+            }`}
+            onClick={() => setType("monthly")}
+          >
             월간
           </button>
-          <button className="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-md">
+          <button
+            className={`px-3 py-1 text-sm rounded-md ${
+              type === "yearly"
+                ? "bg-blue-600 text-white"
+                : "bg-blue-50 text-blue-600"
+            }`}
+            onClick={() => setType("yearly")}
+          >
             연간
           </button>
         </div>
@@ -79,7 +137,7 @@ export const AnalysisChart = () => {
           >
             {minScore}
           </text>
-          {/* x축 월 라벨 */}
+          {/* x축 라벨 */}
           {points.map((p, i) => (
             <text
               key={i}
@@ -89,7 +147,7 @@ export const AnalysisChart = () => {
               fill="#334155"
               textAnchor="middle"
             >
-              {p.month}
+              {p.label}
             </text>
           ))}
           {/* 꺾은선 */}
