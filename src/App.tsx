@@ -1,17 +1,18 @@
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header";
+import { SearchResult } from "./pages/SearchResult";
+import { DetailPage } from "./pages/DetailPage";
 import { Dashboard } from "./components/Dashboard";
-
 
 export function App() {
   return (
-    <div className="flex flex-col w-full min-h-screen bg-slate-50">
+    <BrowserRouter>
       <Header />
-      <div className="flex flex-1">
-        <main className="flex-1 p-4">
-          <Dashboard />
-        </main>
-      </div>
-    </div>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/search" element={<SearchResult />} />
+        <Route path="/detail/:id" element={<DetailPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

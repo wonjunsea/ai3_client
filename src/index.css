@@ -1,5 +1,19 @@
 /* PLEASE NOTE: THESE TAILWIND IMPORTS SHOULD NEVER BE DELETED */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 /* DO NOT DELETE THESE TAILWIND IMPORTS, OTHERWISE THE STYLING WILL NOT RENDER AT ALL */
+.loader {
+  border: 4px solid rgba(59, 130, 246, 0.2); /* Tailwind's blue-500 with opacity */
+  border-top-color: #2563eb; /* Tailwind's blue-600 */
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
