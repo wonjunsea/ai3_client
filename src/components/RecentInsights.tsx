@@ -1,5 +1,5 @@
 import { FileTextIcon, ExternalLinkIcon } from "lucide-react";
-//태그는 3가지 종류로 구성 되어있음음
+//태그는 3가지 종류로 구성 되어있음
 // select option에 있는 모든 항목을 mainCategories로 선언
 const companyName = ["삼성물산","치폴레"];//1.만약 기사에 회사의 이름이 있는 경우 그 이름이 뜨도록
 const mainCategories = [//2.카테고리 나눈것 ,krx 한국거래소 기준
