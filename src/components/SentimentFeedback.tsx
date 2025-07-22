@@ -1,3 +1,4 @@
+//이 컴포넌트 사용 안하는것 같아서 삭제 해도될꺼 같아요
 import { SmileIcon, MehIcon, FrownIcon, MessageSquareIcon } from "lucide-react";
 export const SentimentFeedback = () => {
   const sentimentData = [

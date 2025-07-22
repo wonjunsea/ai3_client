@@ -2,32 +2,32 @@ import { FileTextIcon, ExternalLinkIcon } from "lucide-react";
 export const RecentInsights = () => {
   const insightData = [
     {
-      title: "반도체 시장 회복 조짐, 하반기 실적 개선 전망",
-      category: "산업분석",
+      title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
+      category: "건설",
       score: 78,
-      date: "2023-07-15",
-      source: "한국경제",
+      date: "2025-07-20",
+      source: "아시아경제",
     },
     {
-      title: "금리 동결 발표에 따른 금융주 영향 분석",
-      category: "금융",
+      title: "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
+      category: "바이오",
       score: 65,
-      date: "2023-07-14",
-      source: "매일경제",
+      date: "2024-07-20",
+      source: "해럴드경제",
     },
     {
-      title: "전기차 배터리 기업 실적 전망 및 투자 전략",
+      title: "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
       category: "자동차",
       score: 82,
-      date: "2023-07-13",
+      date: "2024-07-20",
       source: "서울경제",
     },
     {
-      title: "바이오 기업 신약 개발 현황 및 시장 전망",
-      category: "바이오",
+      title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
+      category: "식품",
       score: 73,
-      date: "2023-07-12",
-      source: "헬스조선",
+      date: "2024-07-18",
+      source: "연합인포해외",
     },
   ];
   return (
