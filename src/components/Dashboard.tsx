@@ -1,5 +1,5 @@
 import { StockAnalysis } from "./StockAnalysis";
-import { SentimentFeedback } from "./SentimentFeedback";
+import { SentimentFeedback } from "./SentimentFeedback";//이거 사용안하는것 같아요 삭제 해도될듯합니다.
 import { AnalysisChart } from "./AnalysisChart";
 import { TrendingStocks } from "./TrendingStocks";
 import { RecentInsights } from "./RecentInsights";
