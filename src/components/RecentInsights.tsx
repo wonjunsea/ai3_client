@@ -1,4 +1,5 @@
 import { FileTextIcon, ExternalLinkIcon } from "lucide-react";
+
 import {
   COMPANY_NAMES,
   MAIN_CATEGORIES,
@@ -143,6 +144,7 @@ export const RecentInsights = () => {
         <div className="flex space-x-2">
           <select className="px-3 py-1 border rounded-md text-sm">
             <option>모든 카테고리</option>
+
             {categories.map((cat, idx) => (
               <option key={idx}>{cat}</option>
             ))}
@@ -155,6 +157,7 @@ export const RecentInsights = () => {
       <div className="space-y-4">
         {insightData.map((insight, index) => (
           <InsightItem key={index} insight={insight} />
+
         ))}
       </div>
     </div>
