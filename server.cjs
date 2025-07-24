@@ -1,4 +1,5 @@
-const express = require('express');//네이버 스튜디오 접근하려면 이거 필요합니다,서버만들어서 우회에서 접근해야함
+//아주 간단하게 구현안 node.js백엔드라 따로 기능은 없습니다.다만 네이버 스튜디오 접근하려면 이거 필요합니다,서버만들어서 우회에서 접근해야함
+const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 require('dotenv').config();
@@ -6,6 +7,8 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+console.log('Loaded CLOVA_API_KEY:', process.env.CLOVA_API_KEY);
 
 app.post('/api/clova-summary', async (req, res) => {
   try {
@@ -17,7 +20,7 @@ app.post('/api/clova-summary', async (req, res) => {
           Authorization: `Bearer ${process.env.CLOVA_API_KEY}`,
           'X-NCP-CLOVASTUDIO-REQUEST-ID': 'demo-' + Date.now(),
           'Content-Type': 'application/json',
-          Accept: 'text/event-stream',
+          Accept: 'application/json',
         },
       }
     );
