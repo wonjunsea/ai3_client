@@ -12,7 +12,7 @@ console.log('Loaded CLOVA_API_KEY:', process.env.CLOVA_API_KEY);
 
 app.post('/api/clova-summary', async (req, res) => {
   try {
-    const response = await axios.post(
+    const response = await axios.post(//응답이 여기에 저장됩니다 "response.data"
       'https://clovastudio.stream.ntruss.com/v3/chat-completions/HCX-005',
       req.body,
       {
@@ -25,6 +25,7 @@ app.post('/api/clova-summary', async (req, res) => {
       }
     );
     res.json(response.data);
+    console.log('요약 결과:', response.data?.result?.message?.content);//터미널에서 요약 결과 보실수 있습니다.
   } catch (err) {
     res.status(500).json({ error: err.message, detail: err.response?.data });
   }
