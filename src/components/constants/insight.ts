@@ -34,3 +34,5 @@ export const AI_EMOTIONS = {
   HOLD: "보류",
   NEGATIVE: "부정적",
 }; // 4. AI 평가로 해도 되고 아니면 애널리스트 평가로 하셔도 됩니다., 객체로 변경하여 키로 감정 구분
+
+  
