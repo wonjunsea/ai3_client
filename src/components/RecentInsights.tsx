@@ -1,10 +1,12 @@
 import { FileTextIcon, ExternalLinkIcon } from "lucide-react";
-
 import {
   COMPANY_NAMES,
   MAIN_CATEGORIES,
   AI_EMOTIONS,
-} from "./constants/Insight";
+} from "./constants/insight.ts";
+import INSIGHT_CONTENTS from './constants/insightContents';
+import ClovaSummary from './ClovaSummary';//hyper-clova 요약을 받기위한 컴포넌트 입니다.반드시 import 해주세요.
+import React, { useState } from 'react';
 
 interface Insight {
   companyName?: string;
@@ -15,6 +17,7 @@ interface Insight {
   score: number;
   date: string;
   source: string;
+  content?: string; // 기사 본문 등
 }
 
 const insightData: Insight[] = [
@@ -27,6 +30,7 @@ const insightData: Insight[] = [
     score: 78,
     date: "2025-07-20",
     source: "아시아경제",
+    content: INSIGHT_CONTENTS[0],
   },
   {
     title:
@@ -37,6 +41,7 @@ const insightData: Insight[] = [
     score: 65,
     date: "2024-07-20",
     source: "해럴드경제",
+    content: INSIGHT_CONTENTS[1],
   },
   {
     title:
@@ -47,6 +52,7 @@ const insightData: Insight[] = [
     score: 82,
     date: "2024-07-20",
     source: "서울경제",
+    content: INSIGHT_CONTENTS[2],
   },
   {
     companyName: COMPANY_NAMES.CHIPOLE.name,
@@ -57,6 +63,7 @@ const insightData: Insight[] = [
     score: 73,
     date: "2024-07-18",
     source: "연합인포해외",
+    content: INSIGHT_CONTENTS[3],
   },
 ];
 
@@ -73,7 +80,7 @@ const scoreColor = (score: number) => {
   return "text-red-600";
 };
 
-const InsightItem = ({ insight }: { insight: Insight }) => {
+const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insight: Insight) => void }) => {
   return (
     <div className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
       <div className="flex items-start">
@@ -123,7 +130,7 @@ const InsightItem = ({ insight }: { insight: Insight }) => {
             <div>
               {insight.date} | {insight.source}
             </div>
-            <button className="flex items-center text-blue-600 hover:text-blue-800">
+            <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={() => onDetail(insight)}>
               <span className="mr-1">자세히</span>
               <ExternalLinkIcon className="h-3 w-3" />
             </button>
@@ -136,6 +143,15 @@ const InsightItem = ({ insight }: { insight: Insight }) => {
 
 export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
+  const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
+  const [summary, setSummary] = useState(''); // 요약 결과 상태 추가
+
+  const handleDetail = (insight: Insight) => {
+    setSelectedInsight(insight);
+    setSummary(''); // 새 인사이트 클릭 시 요약 결과 초기화
+  };
+
+  const closeModal = () => setSelectedInsight(null);
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
@@ -144,7 +160,6 @@ export const RecentInsights = () => {
         <div className="flex space-x-2">
           <select className="px-3 py-1 border rounded-md text-sm">
             <option>모든 카테고리</option>
-
             {categories.map((cat, idx) => (
               <option key={idx}>{cat}</option>
             ))}
@@ -156,10 +171,24 @@ export const RecentInsights = () => {
       </div>
       <div className="space-y-4">
         {insightData.map((insight, index) => (
-          <InsightItem key={index} insight={insight} />
-
+          <InsightItem key={index} insight={insight} onDetail={handleDetail} />
         ))}
       </div>
+      {selectedInsight && (
+        <div style={{
+          position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh',
+          background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+        }} onClick={closeModal}>
+          <div style={{ background: 'white', borderRadius: 8, minWidth: 350, maxWidth: 500, padding: 24 }} onClick={e => e.stopPropagation()}>
+            <button style={{ float: 'right', fontSize: 18, marginBottom: 8 }} onClick={closeModal}>X</button>
+            <ClovaSummary text={selectedInsight.content || selectedInsight.title} onSummary={setSummary} />
+            <div style={{marginTop: 16}}>
+              <h4>AI 요약 결과</h4>
+              <pre style={{whiteSpace: 'pre-wrap'}}>{summary || '요약 결과 없음'}</pre>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
