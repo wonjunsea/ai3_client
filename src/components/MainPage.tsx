@@ -1,6 +1,6 @@
 import { StockAnalysis } from "./StockAnalysis";
 
-import { TrendingStocks } from "./TrendingStocks";
+import { TrendingStocks } from "./FavoriteStocks";
 import { RecentInsights } from "./RecentInsights";
 export const Dashboard = () => {
   return (
