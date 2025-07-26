@@ -1,10 +1,11 @@
 import { SearchIcon, BellIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const Header = () => {
   const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +18,11 @@ export const Header = () => {
     <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-20">
       <div className="flex items-center justify-between px-4 py-2 h-14">
         <h1
-          onClick={() => navigate("/")}
+          onClick={() => {
+            if (location.pathname !== "/") {
+              navigate("/");
+            }
+          }}
           className="text-lg font-bold text-blue-700 cursor-pointer select-none"
         >
           AI3

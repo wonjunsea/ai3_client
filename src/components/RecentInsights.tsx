@@ -4,11 +4,10 @@ import {
   MAIN_CATEGORIES,
   AI_EMOTIONS,
 } from "./constants/insight.ts";
-
 import INSIGHT_CONTENTS from "./constants/insightContents";
 import ClovaSummary from "./ClovaSummary";
 import { useState, useEffect } from "react";
-import { TOTAL_SCORES } from "../index.tsx";
+import { TOTAL_SCORES } from "../index.tsx"; //이게 최종 점수입니다.
 
 interface Insight {
   companyName?: string;
@@ -107,68 +106,63 @@ const InsightItem = ({
 export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
-
   const [summary, setSummary] = useState("");
-  const [insightData, setInsightData] = useState<Insight[]>([]);
+  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
+  const [insightData, setInsightData] = useState<Insight[]>([
+    {
+      companyName: COMPANY_NAMES.SAMSUNG.name,
+      title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
+      mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
+      subCategories: ["건설", "KRX 300"],
+      aiEmotion: AI_EMOTIONS.POSITIVE,
+      score: 0, // 점수는 이후에 scores로 치환
+      date: "2025-07-20",
+      source: "아시아경제",
+      content: INSIGHT_CONTENTS[0],
+    },
+    {
+      title:
+        "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
+      mainCategory: MAIN_CATEGORIES.HEALTHCARE,
+      subCategories: ["바이오"],
+      aiEmotion: AI_EMOTIONS.POSITIVE,
+      score: 0,
+      date: "2024-07-20",
+      source: "해럴드경제",
+      content: INSIGHT_CONTENTS[1],
+    },
+    {
+      title:
+        "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
+      mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
+      subCategories: ["자동차", "자동차부품"],
+      aiEmotion: AI_EMOTIONS.NEGATIVE,
+      score: 0,
+      date: "2024-07-20",
+      source: "서울경제",
+      content: INSIGHT_CONTENTS[2],
+    },
+    {
+      companyName: COMPANY_NAMES.CHIPOLE.name,
+      title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
+      mainCategory: MAIN_CATEGORIES.CONSUMER_STAPLES,
+      subCategories: ["식품"],
+      aiEmotion: AI_EMOTIONS.POSITIVE,
+      score: 0,
+      date: "2024-07-18",
+      source: "연합인포해외",
+      content: INSIGHT_CONTENTS[3],
+    },
+  ]);
 
-
-
-  useEffect(() => {// 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
+  useEffect(() => {
+    // 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
-
       if (TOTAL_SCORES.some((score) => score > 0)) {
-        setInsightData([
-          {
-            companyName: COMPANY_NAMES.SAMSUNG.name,
-            title:
-              "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
-            mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
-            subCategories: ["건설", "KRX 300"],
-            aiEmotion: AI_EMOTIONS.POSITIVE,
-            score: TOTAL_SCORES[0] ?? 0,
-            date: "2025-07-20",
-            source: "아시아경제",
-            content: INSIGHT_CONTENTS[0],
-          },
-          {
-            title:
-              "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
-            mainCategory: MAIN_CATEGORIES.HEALTHCARE,
-            subCategories: ["바이오"],
-            aiEmotion: AI_EMOTIONS.POSITIVE,
-            score: TOTAL_SCORES[1] ?? 0,
-            date: "2024-07-20",
-            source: "해럴드경제",
-            content: INSIGHT_CONTENTS[1],
-          },
-          {
-            title:
-              "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
-            mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
-            subCategories: ["자동차", "자동차부품"],
-            aiEmotion: AI_EMOTIONS.NEGATIVE,
-            score: TOTAL_SCORES[2] ?? 0,
-            date: "2024-07-20",
-            source: "서울경제",
-            content: INSIGHT_CONTENTS[2],
-          },
-          {
-            companyName: COMPANY_NAMES.CHIPOLE.name,
-            title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
-            mainCategory: MAIN_CATEGORIES.CONSUMER_STAPLES,
-            subCategories: ["식품"],
-            aiEmotion: AI_EMOTIONS.POSITIVE,
-            score: TOTAL_SCORES[3] ?? 0,
-            date: "2024-07-18",
-            source: "연합인포해외",
-            content: INSIGHT_CONTENTS[3],
-          },
-        ]);
+        setScores([...TOTAL_SCORES]); // 업데이트된 점수 복사
         clearInterval(interval);
       }
-    }, 300); // 300ms마다 TOTAL_SCORES 체크
-
-
+    }, 300);
     return () => clearInterval(interval);
   }, []);
 
@@ -180,24 +174,23 @@ export const RecentInsights = () => {
   const closeModal = () => setSelectedInsight(null);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 mt-3">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-base font-bold text-gray-800">최근 인사이트</h3>
-        <div className="flex space-x-1">
-          <select className="px-2 py-1 border rounded-md text-xs">
+    <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-bold text-gray-800">최근 인사이트</h3>
+        <div className="flex space-x-2">
+          <select className="px-3 py-1 border rounded-md text-sm">
             <option>모든 카테고리</option>
             {categories.map((cat, idx) => (
               <option key={idx}>{cat}</option>
             ))}
           </select>
-          <button className="text-blue-600 text-xs font-medium hover:text-blue-800">
+          <button className="text-blue-600 text-sm font-medium hover:text-blue-800">
             더 보기
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
-
+      <div className="space-y-4">
         {insightData.map((insight, index) => (
           <InsightItem
             key={index}
@@ -226,11 +219,10 @@ export const RecentInsights = () => {
           <div
             style={{
               background: "white",
-              borderRadius: 12,
-              minWidth: 280,
-              maxWidth: 360,
-              width: "90vw",
-              padding: 16,
+              borderRadius: 8,
+              minWidth: 350,
+              maxWidth: 500,
+              padding: 24,
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -244,13 +236,6 @@ export const RecentInsights = () => {
               text={selectedInsight.content || selectedInsight.title}
               onSummary={setSummary}
             />
-            <div style={{ marginTop: 12 }}>
-              <h4 className="text-sm font-bold mb-1">AI 요약 결과</h4>
-              <pre style={{ whiteSpace: "pre-wrap", fontSize: 13 }}>
-                {summary || "요약 결과 없음"}
-              </pre>
-            </div>
-
           </div>
         </div>
       )}
