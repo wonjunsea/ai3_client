@@ -4,6 +4,7 @@ import {
   MAIN_CATEGORIES,
   AI_EMOTIONS,
 } from "./constants/insight.ts";
+
 import INSIGHT_CONTENTS from "./constants/insightContents";
 import ClovaSummary from "./ClovaSummary";
 import { useState, useEffect } from "react";
@@ -106,11 +107,15 @@ const InsightItem = ({
 export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
+
   const [summary, setSummary] = useState("");
   const [insightData, setInsightData] = useState<Insight[]>([]);
 
-  useEffect(() => {
+
+
+  useEffect(() => {// 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
+
       if (TOTAL_SCORES.some((score) => score > 0)) {
         setInsightData([
           {
@@ -163,6 +168,7 @@ export const RecentInsights = () => {
       }
     }, 300); // 300ms마다 TOTAL_SCORES 체크
 
+
     return () => clearInterval(interval);
   }, []);
 
@@ -189,11 +195,18 @@ export const RecentInsights = () => {
           </button>
         </div>
       </div>
+
       <div className="flex flex-col gap-3">
+
         {insightData.map((insight, index) => (
-          <InsightItem key={index} insight={insight} onDetail={handleDetail} />
+          <InsightItem
+            key={index}
+            insight={{ ...insight, score: scores[index] ?? 0 }} //점수만 동적으로 적용
+            onDetail={handleDetail}
+          />
         ))}
       </div>
+
       {selectedInsight && (
         <div
           style={{
@@ -237,6 +250,7 @@ export const RecentInsights = () => {
                 {summary || "요약 결과 없음"}
               </pre>
             </div>
+
           </div>
         </div>
       )}
