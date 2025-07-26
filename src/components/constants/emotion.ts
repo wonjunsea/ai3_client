@@ -1,4 +1,4 @@
-export const EMOTIONS: string [] = [//1.기업 분석 분류,매수 중립 매도의 3가지의 종류 존재 외국 주식의 경우 STRONG BUY,BUY,HOLD,SELL,STRONG SELL의 5가지의 종류 존재 
+export const EMOTIONS: string [] = [//사용자에게 데이터를 받아,3가지의 감정상태로 환산하여 20점 환산하여 사용,일단은 더미데이터터
     `긍정 80%`,
     `긍정 75%`,
     `중립 60%`,
