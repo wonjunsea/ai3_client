@@ -1,11 +1,14 @@
-import './index.css';
+import "./index.css";
 import React from "react";
 import { render } from "react-dom";
 import { App } from "./App";
-import { callClovaScoreOnly } from './components/ClovaSummary';
-import INSIGHT_CONTENTS from './components/constants/insightContents';
-import { ANALYST_COMPANY, ANALYST_Industry } from './components/constants/analyst_Analysis';
-import { EMOTIONS } from './components/constants/emotion';
+import { callClovaScoreOnly } from "./components/service/ClovaSummary";
+import INSIGHT_CONTENTS from "./components/constants/insightContents";
+import {
+  ANALYST_COMPANY,
+  ANALYST_Industry,
+} from "./components/constants/analyst_Analysis";
+import { EMOTIONS } from "./components/constants/emotion";
 
 render(<App />, document.getElementById("root"));
 
@@ -14,8 +17,8 @@ export let TOTAL_SCORES: number[] = [0, 0, 0, 0];
 
 // 외부 접근 안전 함수
 export function getTotalScores(): number[] {
-    return TOTAL_SCORES;
-  }
+  return TOTAL_SCORES;
+}
 
 // 초기화 실행
 (async () => {

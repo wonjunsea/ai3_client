@@ -4,10 +4,10 @@ import {
   MAIN_CATEGORIES,
   AI_EMOTIONS,
 } from "./constants/insight.ts";
-import INSIGHT_CONTENTS from './constants/insightContents';
-import ClovaSummary from './ClovaSummary';
-import React, { useState, useEffect } from 'react';
-import { TOTAL_SCORES } from '../index.tsx';//이게 최종 점수입니다.
+import INSIGHT_CONTENTS from "./constants/insightContents";
+import ClovaSummary from "./service/ClovaSummary.tsx";
+import { useState, useEffect } from "react";
+import { TOTAL_SCORES } from "../index.tsx"; //이게 최종 점수입니다.
 
 interface Insight {
   companyName?: string;
@@ -33,7 +33,13 @@ const scoreColor = (score: number) => {
   return "text-red-600";
 };
 
-const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insight: Insight) => void }) => {
+const InsightItem = ({
+  insight,
+  onDetail,
+}: {
+  insight: Insight;
+  onDetail: (insight: Insight) => void;
+}) => {
   return (
     <div className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
       <div className="flex items-start">
@@ -72,7 +78,9 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
                 </span>
               )}
             </div>
-            <span className={`text-xs font-medium ${scoreColor(insight.score)}`}>
+            <span
+              className={`text-xs font-medium ${scoreColor(insight.score)}`}
+            >
               AI 점수: {insight.score}/100
             </span>
           </div>
@@ -98,7 +106,7 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
 export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
-  const [summary, setSummary] = useState('');
+  const [summary, setSummary] = useState("");
   const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
   const [insightData, setInsightData] = useState<Insight[]>([
     {
@@ -113,7 +121,8 @@ export const RecentInsights = () => {
       content: INSIGHT_CONTENTS[0],
     },
     {
-      title: "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
+      title:
+        "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
       mainCategory: MAIN_CATEGORIES.HEALTHCARE,
       subCategories: ["바이오"],
       aiEmotion: AI_EMOTIONS.POSITIVE,
@@ -123,7 +132,8 @@ export const RecentInsights = () => {
       content: INSIGHT_CONTENTS[1],
     },
     {
-      title: "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
+      title:
+        "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
       mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
       subCategories: ["자동차", "자동차부품"],
       aiEmotion: AI_EMOTIONS.NEGATIVE,
@@ -145,10 +155,10 @@ export const RecentInsights = () => {
     },
   ]);
 
-
-  useEffect(() => {// 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
+  useEffect(() => {
+    // 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
-      if (TOTAL_SCORES.some(score => score > 0)) {
+      if (TOTAL_SCORES.some((score) => score > 0)) {
         setScores([...TOTAL_SCORES]); // 업데이트된 점수 복사
         clearInterval(interval);
       }
@@ -158,7 +168,7 @@ export const RecentInsights = () => {
 
   const handleDetail = (insight: Insight) => {
     setSelectedInsight(insight);
-    setSummary('');
+    setSummary("");
   };
 
   const closeModal = () => setSelectedInsight(null);
@@ -191,13 +201,41 @@ export const RecentInsights = () => {
       </div>
 
       {selectedInsight && (
-        <div style={{
-          position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh',
-          background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }} onClick={closeModal}>
-          <div style={{ background: 'white', borderRadius: 8, minWidth: 350, maxWidth: 500, padding: 24 }} onClick={e => e.stopPropagation()}>
-            <button style={{ float: 'right', fontSize: 18, marginBottom: 8 }} onClick={closeModal}>X</button>
-            <ClovaSummary text={selectedInsight.content || selectedInsight.title} onSummary={setSummary} />
+        <div
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            style={{
+              background: "white",
+              borderRadius: 8,
+              minWidth: 350,
+              maxWidth: 500,
+              padding: 24,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              style={{ float: "right", fontSize: 18, marginBottom: 8 }}
+              onClick={closeModal}
+            >
+              X
+            </button>
+            <ClovaSummary
+              text={selectedInsight.content || selectedInsight.title}
+              onSummary={setSummary}
+            />
           </div>
         </div>
       )}
