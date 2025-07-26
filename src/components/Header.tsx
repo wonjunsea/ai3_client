@@ -14,34 +14,35 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
-      <div className="flex items-center justify-between px-6 py-3">
+    <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-20">
+      <div className="flex items-center justify-between px-4 py-2 h-14">
         <h1
           onClick={() => navigate("/")}
-          className="text-xl font-bold text-blue-700 cursor-pointer"
+          className="text-lg font-bold text-blue-700 cursor-pointer select-none"
         >
-          주식 인사이트 AI
+          AI3
         </h1>
-        <form onSubmit={handleSearch} className="flex items-center space-x-6">
-          <div className="relative">
+        <form onSubmit={handleSearch} className="flex items-center space-x-2">
+          <div className="relative w-36">
             <input
               type="text"
               placeholder="검색..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
-              className="py-2 pl-10 pr-4 text-sm border rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="py-1.5 pl-9 pr-3 text-sm border rounded-full w-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
             />
-            <SearchIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+            <SearchIcon className="absolute left-2 top-2 h-4 w-4 text-gray-400" />
           </div>
           <button
             type="submit"
-            className="p-2 text-gray-500 hover:text-blue-600"
+            className="p-1 text-gray-500 hover:text-blue-600"
+            tabIndex={-1}
           >
             <BellIcon className="h-5 w-5" />
           </button>
-          <div className="flex items-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
-              <UserIcon className="h-5 w-5" />
+          <div className="flex items-center ml-1">
+            <div className="w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center text-white">
+              <UserIcon className="h-4 w-4" />
             </div>
           </div>
         </form>

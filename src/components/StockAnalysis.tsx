@@ -35,93 +35,53 @@ export const StockAnalysis = () => {
     },
   ];
   return (
-    <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-bold text-gray-800">주식 AI 분석</h3>
-        <button className="text-blue-600 text-sm font-medium hover:text-blue-800">
+    <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-base font-bold text-gray-800">주식 AI 분석</h3>
+        <button className="text-blue-600 text-xs font-medium hover:text-blue-800">
           전체보기
         </button>
       </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                종목명
-              </th>
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                종목코드
-              </th>
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                AI 점수
-              </th>
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                변동
-              </th>
-              <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                인사이트
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {stockAnalysis.map((stock, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+      <div className="flex flex-col gap-3">
+        {stockAnalysis.map((stock, index) => (
+          <div
+            key={index}
+            className="flex items-center bg-gray-50 rounded-lg p-3 shadow-sm"
+          >
+            <div
+              className={`w-12 h-12 rounded-full flex items-center justify-center mr-3 text-lg font-bold ${
+                stock.score >= 75
+                  ? "bg-green-100 text-green-800"
+                  : stock.score >= 60
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
+              {stock.score}
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-gray-900 text-sm">
                   {stock.name}
-                </td>
-                <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {stock.code}
-                </td>
-                <td className="px-3 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center mr-2 ${
-                        stock.score >= 75
-                          ? "bg-green-100 text-green-800"
-                          : stock.score >= 60
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {stock.score}
-                    </div>
-                    <div className="h-2 w-24 bg-gray-200 rounded-full">
-                      <div
-                        className={`h-2 rounded-full ${
-                          stock.score >= 75
-                            ? "bg-green-500"
-                            : stock.score >= 60
-                            ? "bg-yellow-500"
-                            : "bg-red-500"
-                        }`}
-                        style={{
-                          width: `${stock.score}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </td>
-                <td className="px-3 py-4 whitespace-nowrap">
-                  <div
-                    className={`flex items-center ${
-                      stock.trend === "up" ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {stock.trend === "up" ? (
-                      <ArrowUpIcon className="h-4 w-4 mr-1" />
-                    ) : (
-                      <ArrowDownIcon className="h-4 w-4 mr-1" />
-                    )}
-                    <span>{stock.change}%</span>
-                  </div>
-                </td>
-                <td className="px-3 py-4 text-sm text-gray-500">
-                  {stock.insight}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </span>
+                <span className="text-xs text-gray-500">{stock.code}</span>
+                <span
+                  className={`flex items-center ml-2 text-xs font-semibold ${
+                    stock.trend === "up" ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {stock.trend === "up" ? (
+                    <ArrowUpIcon className="h-3 w-3 mr-0.5" />
+                  ) : (
+                    <ArrowDownIcon className="h-3 w-3 mr-0.5" />
+                  )}
+                  {stock.change}%
+                </span>
+              </div>
+              <div className="text-xs text-gray-600 mt-1">{stock.insight}</div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

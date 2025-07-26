@@ -4,10 +4,10 @@ import {
   MAIN_CATEGORIES,
   AI_EMOTIONS,
 } from "./constants/insight.ts";
-import INSIGHT_CONTENTS from './constants/insightContents';
-import ClovaSummary from './ClovaSummary';
-import React, { useState, useEffect } from 'react';
-import { TOTAL_SCORES } from '../index.tsx';
+import INSIGHT_CONTENTS from "./constants/insightContents";
+import ClovaSummary from "./ClovaSummary";
+import { useState, useEffect } from "react";
+import { TOTAL_SCORES } from "../index.tsx";
 
 interface Insight {
   companyName?: string;
@@ -33,7 +33,13 @@ const scoreColor = (score: number) => {
   return "text-red-600";
 };
 
-const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insight: Insight) => void }) => {
+const InsightItem = ({
+  insight,
+  onDetail,
+}: {
+  insight: Insight;
+  onDetail: (insight: Insight) => void;
+}) => {
   return (
     <div className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
       <div className="flex items-start">
@@ -72,7 +78,9 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
                 </span>
               )}
             </div>
-            <span className={`text-xs font-medium ${scoreColor(insight.score)}`}>
+            <span
+              className={`text-xs font-medium ${scoreColor(insight.score)}`}
+            >
               AI 점수: {insight.score}/100
             </span>
           </div>
@@ -98,16 +106,17 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
 export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
-  const [summary, setSummary] = useState('');
+  const [summary, setSummary] = useState("");
   const [insightData, setInsightData] = useState<Insight[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (TOTAL_SCORES.some(score => score > 0)) {
+      if (TOTAL_SCORES.some((score) => score > 0)) {
         setInsightData([
           {
             companyName: COMPANY_NAMES.SAMSUNG.name,
-            title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
+            title:
+              "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
             mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
             subCategories: ["건설", "KRX 300"],
             aiEmotion: AI_EMOTIONS.POSITIVE,
@@ -117,7 +126,8 @@ export const RecentInsights = () => {
             content: INSIGHT_CONTENTS[0],
           },
           {
-            title: "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
+            title:
+              "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
             mainCategory: MAIN_CATEGORIES.HEALTHCARE,
             subCategories: ["바이오"],
             aiEmotion: AI_EMOTIONS.POSITIVE,
@@ -127,7 +137,8 @@ export const RecentInsights = () => {
             content: INSIGHT_CONTENTS[1],
           },
           {
-            title: "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
+            title:
+              "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
             mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
             subCategories: ["자동차", "자동차부품"],
             aiEmotion: AI_EMOTIONS.NEGATIVE,
@@ -151,49 +162,80 @@ export const RecentInsights = () => {
         clearInterval(interval);
       }
     }, 300); // 300ms마다 TOTAL_SCORES 체크
-  
+
     return () => clearInterval(interval);
   }, []);
 
   const handleDetail = (insight: Insight) => {
     setSelectedInsight(insight);
-    setSummary('');
+    setSummary("");
   };
 
   const closeModal = () => setSelectedInsight(null);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-5 border border-gray-100">
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-lg font-bold text-gray-800">최근 인사이트</h3>
-        <div className="flex space-x-2">
-          <select className="px-3 py-1 border rounded-md text-sm">
+    <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100 mt-3">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-base font-bold text-gray-800">최근 인사이트</h3>
+        <div className="flex space-x-1">
+          <select className="px-2 py-1 border rounded-md text-xs">
             <option>모든 카테고리</option>
             {categories.map((cat, idx) => (
               <option key={idx}>{cat}</option>
             ))}
           </select>
-          <button className="text-blue-600 text-sm font-medium hover:text-blue-800">
+          <button className="text-blue-600 text-xs font-medium hover:text-blue-800">
             더 보기
           </button>
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="flex flex-col gap-3">
         {insightData.map((insight, index) => (
           <InsightItem key={index} insight={insight} onDetail={handleDetail} />
         ))}
       </div>
       {selectedInsight && (
-        <div style={{
-          position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh',
-          background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-        }} onClick={closeModal}>
-          <div style={{ background: 'white', borderRadius: 8, minWidth: 350, maxWidth: 500, padding: 24 }} onClick={e => e.stopPropagation()}>
-            <button style={{ float: 'right', fontSize: 18, marginBottom: 8 }} onClick={closeModal}>X</button>
-            <ClovaSummary text={selectedInsight.content || selectedInsight.title} onSummary={setSummary} />
-            <div style={{ marginTop: 16 }}>
-              <h4>AI 요약 결과</h4>
-              <pre style={{ whiteSpace: 'pre-wrap' }}>{summary || '요약 결과 없음'}</pre>
+        <div
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            style={{
+              background: "white",
+              borderRadius: 12,
+              minWidth: 280,
+              maxWidth: 360,
+              width: "90vw",
+              padding: 16,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              style={{ float: "right", fontSize: 18, marginBottom: 8 }}
+              onClick={closeModal}
+            >
+              X
+            </button>
+            <ClovaSummary
+              text={selectedInsight.content || selectedInsight.title}
+              onSummary={setSummary}
+            />
+            <div style={{ marginTop: 12 }}>
+              <h4 className="text-sm font-bold mb-1">AI 요약 결과</h4>
+              <pre style={{ whiteSpace: "pre-wrap", fontSize: 13 }}>
+                {summary || "요약 결과 없음"}
+              </pre>
             </div>
           </div>
         </div>
