@@ -198,10 +198,6 @@ export const RecentInsights = () => {
           <div style={{ background: 'white', borderRadius: 8, minWidth: 350, maxWidth: 500, padding: 24 }} onClick={e => e.stopPropagation()}>
             <button style={{ float: 'right', fontSize: 18, marginBottom: 8 }} onClick={closeModal}>X</button>
             <ClovaSummary text={selectedInsight.content || selectedInsight.title} onSummary={setSummary} />
-            <div style={{ marginTop: 16 }}>
-              <h4>AI 요약 결과</h4>
-              <pre style={{ whiteSpace: 'pre-wrap' }}>{summary || '요약 결과 없음'}</pre>
-            </div>
           </div>
         </div>
       )}
