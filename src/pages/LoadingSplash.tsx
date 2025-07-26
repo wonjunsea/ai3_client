@@ -1,22 +1,10 @@
-import { useEffect } from "react";
-
 interface LoadingSplashProps {
-  onFinish: () => void;
   message?: string;
 }
 
 export const LoadingSplash = ({
-  onFinish,
   message = "AI가 분석중입니다..",
 }: LoadingSplashProps) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onFinish();
-    }, 3000); // 3초로 단축
-
-    return () => clearTimeout(timer);
-  }, [onFinish]);
-
   return (
     <div className="flex items-center justify-center h-screen bg-blue-50">
       <div className="text-center">

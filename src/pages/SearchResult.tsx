@@ -11,19 +11,9 @@ const dummyData = [
     id: 1,
     name: "삼성전자",
     newsText:
-      "삼성전자, 2분기 영업이익이 전년 대비 최대 56% 급감하며 반도체 경쟁력 저하 우려 확산",
-  },
-  {
-    id: 2,
-    name: "카카오",
-    newsText:
-      "골드만삭스 '매수' 의견 재개, 목표가 85,000원 제시—AI·생성형 모델 기반 사업 확장 기대",
-  },
-  {
-    id: 3,
-    name: "네이버",
-    newsText:
-      "스페인 Wallapop 인수 추진 중, 인수가격 관련 논란↑—주가도 최근 등락 지속",
+      "삼성전자는 2025년 7월 9일 미국 뉴욕 브루클린에서 열린 Galaxy Unpacked 행사에서 차세대 AI 기반 인터페이스를 탑재한 Galaxy Z Fold 7과 Galaxy Z Flip 7, 그리고 Galaxy Watch 8 시리즈를 공개했습니다 " +
+      "이 중 Fold 7은 펼쳤을 때 두께 4.2mm, 접었을 때 8.9mm로, 무게는 215g에 불과하며 200MP 메인 카메라와 Galaxy AI 기능을 탑재한 프리미엄 기기입니다  ." +
+      "또한 삼성디스플레이는 오는 2025년 4분기부터 애플의 첫 폴더블 아이폰용 OLED 패널 생산을 시작할 예정이며, Galaxy Z Fold 7 등 신제품은 7월 25일부터 글로벌 출시가 시작됩니다",
   },
 ];
 
@@ -36,15 +26,20 @@ export const SearchResult = () => {
   const filtered = dummyData.filter((item) => item.name.includes(query || ""));
 
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   const handleClick = async (item: (typeof dummyData)[0]) => {
     setLoading(true);
+    setLoadingMessage("AI가 뉴스를 분석하고 있습니다...");
+
     try {
-      // 점수와 요약을 동시에 호출
-      const [score, summary] = await Promise.all([
-        callClovaScoreOnly(item.newsText),
-        getClovaSummaryText(item.newsText),
-      ]);
+      // 점수 분석 시작
+      setLoadingMessage("감정 점수를 계산하고 있습니다...");
+      const score = await callClovaScoreOnly(item.newsText);
+
+      // 요약 분석 시작
+      setLoadingMessage("뉴스 내용을 요약하고 있습니다...");
+      const summary = await getClovaSummaryText(item.newsText);
 
       // DetailPage로 결과 전달
       navigate(`/detail/${item.id}`, {
@@ -64,7 +59,7 @@ export const SearchResult = () => {
   };
 
   if (loading) {
-    return <LoadingSplash onFinish={() => {}} />;
+    return <LoadingSplash message={loadingMessage} />;
   }
 
   return (

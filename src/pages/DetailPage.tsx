@@ -1,13 +1,6 @@
-import { useParams, useLocation } from "react-router-dom";
-
-const dummyData = [
-  { id: 1, name: "삼성전자", description: "삼성전자 상세 정보" },
-  { id: 2, name: "카카오", description: "카카오 상세 정보" },
-  { id: 3, name: "네이버", description: "네이버 상세 정보" },
-];
+import { useLocation } from "react-router-dom";
 
 export const DetailPage = () => {
-  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const state = location.state as {
     name?: string;
@@ -43,36 +36,7 @@ export const DetailPage = () => {
             </pre>
           </div>
         </div>
-
-        {/* 원문 표시 */}
-        <div>
-          <h3 className="text-xl font-bold text-gray-800 mb-3">📰 원문</h3>
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-700 leading-relaxed">{state.newsText}</p>
-          </div>
-        </div>
       </div>
     );
   }
-
-  // 기존 로직 (state가 없는 경우)
-  const item = dummyData.find((d) => d.id === Number(id));
-
-  if (!item)
-    return (
-      <div className="p-6 text-center text-red-500 font-semibold">
-        데이터를 찾을 수 없습니다.
-      </div>
-    );
-
-  return (
-    <div className="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-md mt-8">
-      <h2 className="text-3xl font-extrabold text-blue-700 mb-4">
-        {item.name}
-      </h2>
-      <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-        {item.description}
-      </p>
-    </div>
-  );
 };
