@@ -8,6 +8,10 @@ import INSIGHT_CONTENTS from './constants/insightContents';
 import ClovaSummary from './ClovaSummary';//hyper-clova 요약을 받기위한 컴포넌트 입니다.반드시 import 해주세요.
 import React, { useState } from 'react';
 
+//이 밑 부분은 점수산정을 위한 2가지 컴포넌트 입니다.
+import { EMOTIONS } from "./constants/emotion.ts";//20점 환산을 위한 감정 상태 입니다.ex)긍정 85%
+import { ANALYST_COMPANY, ANALYST_Industry } from "./constants/analyst_Analysis.ts";//40점 환산을 위한 기업 분석 상태 입니다.ex)매수 83.9%
+
 interface Insight {
   companyName?: string;
   title: string;
