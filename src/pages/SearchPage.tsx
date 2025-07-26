@@ -9,8 +9,17 @@ import {
   dummyData,
   SearchResultDummyItem,
 } from "../components/constants/searchResultDummyData";
+import { FavoriteStock } from "../components/FavoriteStocks";
 
-export const SearchResult = () => {
+interface SearchResultProps {
+  onAddFavorite: (stock: FavoriteStock) => void;
+  favoriteStocks: FavoriteStock[];
+}
+
+export const SearchResult = ({
+  onAddFavorite,
+  favoriteStocks,
+}: SearchResultProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -66,15 +75,42 @@ export const SearchResult = () => {
         <p className="text-gray-500">결과가 없습니다.</p>
       )}
       <div className="flex flex-col gap-4">
-        {filtered.map((item: SearchResultDummyItem) => (
-          <div
-            key={item.id}
-            onClick={() => handleClick(item)}
-            className="cursor-pointer bg-white p-4 rounded-lg shadow hover:shadow-md transition hover:bg-blue-50"
-          >
-            <p className="text-lg font-semibold text-gray-700">{item.name}</p>
-          </div>
-        ))}
+        {filtered.map((item: SearchResultDummyItem) => {
+          const isFavorite = favoriteStocks.some(
+            (stock) => stock.name === item.name
+          );
+          return (
+            <div
+              key={item.id}
+              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition hover:bg-blue-50 flex items-center justify-between"
+            >
+              <div className="cursor-pointer" onClick={() => handleClick(item)}>
+                <p className="text-lg font-semibold text-gray-700">
+                  {item.name}
+                </p>
+              </div>
+              <button
+                className={`ml-4 px-2 py-1 text-xs rounded border ${
+                  isFavorite
+                    ? "bg-gray-200 text-gray-400 border-gray-200 cursor-not-allowed"
+                    : "bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200"
+                }`}
+                disabled={isFavorite}
+                onClick={() => {
+                  if (!isFavorite) {
+                    onAddFavorite({
+                      name: item.name,
+                      code: "", // 실제 코드가 있다면 여기에 할당
+                      change: 0, // 실제 변동률이 있다면 여기에 할당
+                    });
+                  }
+                }}
+              >
+                {isFavorite ? "추가됨" : "즐겨찾기 추가"}
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

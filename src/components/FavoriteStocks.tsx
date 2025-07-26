@@ -1,37 +1,17 @@
 import { TrendingUpIcon, TrendingDownIcon } from "lucide-react";
-export const TrendingStocks = () => {
-  const trendingStocks = [
-    {
-      name: "NAVER",
-      code: "035420",
-      change: 2.3,
-      sentiment: "positive",
-    },
-    {
-      name: "LG에너지솔루션",
-      code: "373220",
-      change: 1.8,
-      sentiment: "positive",
-    },
-    {
-      name: "기아",
-      code: "000270",
-      change: -0.7,
-      sentiment: "negative",
-    },
-    {
-      name: "셀트리온",
-      code: "068270",
-      change: 3.1,
-      sentiment: "positive",
-    },
-    {
-      name: "카카오뱅크",
-      code: "323410",
-      change: -1.2,
-      sentiment: "negative",
-    },
-  ];
+
+export interface FavoriteStock {
+  name: string;
+  code: string;
+  change: number;
+  sentiment?: string;
+}
+
+interface FavoriteStocksProps {
+  stocks: FavoriteStock[];
+}
+
+export const FavoriteStocks = ({ stocks }: FavoriteStocksProps) => {
   return (
     <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
       <div className="flex items-center justify-between mb-2">
@@ -41,7 +21,7 @@ export const TrendingStocks = () => {
         </button>
       </div>
       <div className="flex flex-col gap-2">
-        {trendingStocks.map((stock, index) => (
+        {stocks.map((stock, index) => (
           <div
             key={index}
             className="flex items-center justify-between p-2 bg-gray-50 rounded-lg shadow-sm"
