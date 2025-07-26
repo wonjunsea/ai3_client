@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Header } from "./components/Header";
+import { Header } from "./components/layout/Header";
 import { SearchResult } from "./pages/SearchResult";
 import { DetailPage } from "./pages/DetailPage";
-import { Dashboard } from "./components/Dashboard";
+import { Dashboard } from "./components/MainPage";
 
 export function App() {
   return (
