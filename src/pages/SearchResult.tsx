@@ -5,17 +5,10 @@ import {
   callClovaScoreOnly,
   getClovaSummaryText,
 } from "../components/ClovaSummary";
-
-const dummyData = [
-  {
-    id: 1,
-    name: "삼성전자",
-    newsText:
-      "삼성전자는 2025년 7월 9일 미국 뉴욕 브루클린에서 열린 Galaxy Unpacked 행사에서 차세대 AI 기반 인터페이스를 탑재한 Galaxy Z Fold 7과 Galaxy Z Flip 7, 그리고 Galaxy Watch 8 시리즈를 공개했습니다 " +
-      "이 중 Fold 7은 펼쳤을 때 두께 4.2mm, 접었을 때 8.9mm로, 무게는 215g에 불과하며 200MP 메인 카메라와 Galaxy AI 기능을 탑재한 프리미엄 기기입니다  ." +
-      "또한 삼성디스플레이는 오는 2025년 4분기부터 애플의 첫 폴더블 아이폰용 OLED 패널 생산을 시작할 예정이며, Galaxy Z Fold 7 등 신제품은 7월 25일부터 글로벌 출시가 시작됩니다",
-  },
-];
+import {
+  dummyData,
+  SearchResultDummyItem,
+} from "../components/constants/searchResultDummyData";
 
 export const SearchResult = () => {
   const navigate = useNavigate();
@@ -23,12 +16,14 @@ export const SearchResult = () => {
   const params = new URLSearchParams(location.search);
   const query = params.get("query");
 
-  const filtered = dummyData.filter((item) => item.name.includes(query || ""));
+  const filtered = dummyData.filter((item: SearchResultDummyItem) =>
+    item.name.includes(query || "")
+  );
 
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
 
-  const handleClick = async (item: (typeof dummyData)[0]) => {
+  const handleClick = async (item: SearchResultDummyItem) => {
     setLoading(true);
     setLoadingMessage("AI가 뉴스를 분석하고 있습니다...");
 
@@ -71,7 +66,7 @@ export const SearchResult = () => {
         <p className="text-gray-500">결과가 없습니다.</p>
       )}
       <div className="flex flex-col gap-4">
-        {filtered.map((item) => (
+        {filtered.map((item: SearchResultDummyItem) => (
           <div
             key={item.id}
             onClick={() => handleClick(item)}
