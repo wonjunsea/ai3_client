@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LoadingSplash } from "./LoadingSplash";
+import { LoadingSplash } from "./LoadingPage";
 import {
   callClovaScoreOnly,
   getClovaSummaryText,
