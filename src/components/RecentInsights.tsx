@@ -7,7 +7,7 @@ import {
 import INSIGHT_CONTENTS from './constants/insightContents';
 import ClovaSummary from './ClovaSummary';
 import React, { useState, useEffect } from 'react';
-import { TOTAL_SCORES } from '../index.tsx';
+import { TOTAL_SCORES } from '../index.tsx';//이게 최종 점수입니다.
 
 interface Insight {
   companyName?: string;
@@ -99,59 +99,60 @@ export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   const [summary, setSummary] = useState('');
-  const [insightData, setInsightData] = useState<Insight[]>([]);
+  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
+  const [insightData, setInsightData] = useState<Insight[]>([
+    {
+      companyName: COMPANY_NAMES.SAMSUNG.name,
+      title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
+      mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
+      subCategories: ["건설", "KRX 300"],
+      aiEmotion: AI_EMOTIONS.POSITIVE,
+      score: 0, // 점수는 이후에 scores로 치환
+      date: "2025-07-20",
+      source: "아시아경제",
+      content: INSIGHT_CONTENTS[0],
+    },
+    {
+      title: "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
+      mainCategory: MAIN_CATEGORIES.HEALTHCARE,
+      subCategories: ["바이오"],
+      aiEmotion: AI_EMOTIONS.POSITIVE,
+      score: 0,
+      date: "2024-07-20",
+      source: "해럴드경제",
+      content: INSIGHT_CONTENTS[1],
+    },
+    {
+      title: "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
+      mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
+      subCategories: ["자동차", "자동차부품"],
+      aiEmotion: AI_EMOTIONS.NEGATIVE,
+      score: 0,
+      date: "2024-07-20",
+      source: "서울경제",
+      content: INSIGHT_CONTENTS[2],
+    },
+    {
+      companyName: COMPANY_NAMES.CHIPOLE.name,
+      title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
+      mainCategory: MAIN_CATEGORIES.CONSUMER_STAPLES,
+      subCategories: ["식품"],
+      aiEmotion: AI_EMOTIONS.POSITIVE,
+      score: 0,
+      date: "2024-07-18",
+      source: "연합인포해외",
+      content: INSIGHT_CONTENTS[3],
+    },
+  ]);
 
-  useEffect(() => {
+
+  useEffect(() => {// 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
       if (TOTAL_SCORES.some(score => score > 0)) {
-        setInsightData([
-          {
-            companyName: COMPANY_NAMES.SAMSUNG.name,
-            title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
-            mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
-            subCategories: ["건설", "KRX 300"],
-            aiEmotion: AI_EMOTIONS.POSITIVE,
-            score: TOTAL_SCORES[0] ?? 0,
-            date: "2025-07-20",
-            source: "아시아경제",
-            content: INSIGHT_CONTENTS[0],
-          },
-          {
-            title: "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
-            mainCategory: MAIN_CATEGORIES.HEALTHCARE,
-            subCategories: ["바이오"],
-            aiEmotion: AI_EMOTIONS.POSITIVE,
-            score: TOTAL_SCORES[1] ?? 0,
-            date: "2024-07-20",
-            source: "해럴드경제",
-            content: INSIGHT_CONTENTS[1],
-          },
-          {
-            title: "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
-            mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
-            subCategories: ["자동차", "자동차부품"],
-            aiEmotion: AI_EMOTIONS.NEGATIVE,
-            score: TOTAL_SCORES[2] ?? 0,
-            date: "2024-07-20",
-            source: "서울경제",
-            content: INSIGHT_CONTENTS[2],
-          },
-          {
-            companyName: COMPANY_NAMES.CHIPOLE.name,
-            title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
-            mainCategory: MAIN_CATEGORIES.CONSUMER_STAPLES,
-            subCategories: ["식품"],
-            aiEmotion: AI_EMOTIONS.POSITIVE,
-            score: TOTAL_SCORES[3] ?? 0,
-            date: "2024-07-18",
-            source: "연합인포해외",
-            content: INSIGHT_CONTENTS[3],
-          },
-        ]);
+        setScores([...TOTAL_SCORES]); // 업데이트된 점수 복사
         clearInterval(interval);
       }
-    }, 300); // 300ms마다 TOTAL_SCORES 체크
-  
+    }, 300);
     return () => clearInterval(interval);
   }, []);
 
@@ -178,11 +179,17 @@ export const RecentInsights = () => {
           </button>
         </div>
       </div>
+
       <div className="space-y-4">
         {insightData.map((insight, index) => (
-          <InsightItem key={index} insight={insight} onDetail={handleDetail} />
+          <InsightItem
+            key={index}
+            insight={{ ...insight, score: scores[index] ?? 0 }} //점수만 동적으로 적용
+            onDetail={handleDetail}
+          />
         ))}
       </div>
+
       {selectedInsight && (
         <div style={{
           position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh',
@@ -191,10 +198,6 @@ export const RecentInsights = () => {
           <div style={{ background: 'white', borderRadius: 8, minWidth: 350, maxWidth: 500, padding: 24 }} onClick={e => e.stopPropagation()}>
             <button style={{ float: 'right', fontSize: 18, marginBottom: 8 }} onClick={closeModal}>X</button>
             <ClovaSummary text={selectedInsight.content || selectedInsight.title} onSummary={setSummary} />
-            <div style={{ marginTop: 16 }}>
-              <h4>AI 요약 결과</h4>
-              <pre style={{ whiteSpace: 'pre-wrap' }}>{summary || '요약 결과 없음'}</pre>
-            </div>
           </div>
         </div>
       )}
