@@ -5,7 +5,7 @@ import {
   AI_EMOTIONS,
 } from "./constants/insight.ts";
 import INSIGHT_CONTENTS from "./constants/insightContents";
-import ClovaSummary from "./ClovaSummary";
+import ClovaSummary from "./service/ClovaSummary.tsx";
 import { useState, useEffect } from "react";
 import { TOTAL_SCORES } from "../index.tsx"; //이게 최종 점수입니다.
 

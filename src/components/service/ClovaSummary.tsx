@@ -1,7 +1,5 @@
-
-import React, { useState,useEffect } from 'react';
-import axios from 'axios';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 interface ClovaSummaryProps {
   text: string;
@@ -67,7 +65,7 @@ export const getClovaSummaryText = async (text: string): Promise<string> => {
 //2번 함수 입니다.이건 뉴스전체의 텍스트를 응답으로 줍니다.따로 text가 필요할 때 사용합니다.
 
 export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
-  const [summary, setSummary] = useState('');
+  const [summary, setSummary] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -128,4 +126,4 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
       <pre style={{ whiteSpace: "pre-wrap", marginTop: "1em" }}>{summary}</pre>
     </div>
   );
-};
+}

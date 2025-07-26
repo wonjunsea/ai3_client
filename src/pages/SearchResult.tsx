@@ -4,7 +4,7 @@ import { LoadingSplash } from "./LoadingSplash";
 import {
   callClovaScoreOnly,
   getClovaSummaryText,
-} from "../components/ClovaSummary";
+} from "../components/service/ClovaSummary";
 import {
   dummyData,
   SearchResultDummyItem,
