@@ -9,16 +9,18 @@ import {
   dummyData,
   SearchResultDummyItem,
 } from "../components/constants/searchResultDummyData";
-import { FavoriteStock } from "../components/FavoriteStocks";
+import { FavoriteStock, FavoriteStocks } from "../components/FavoriteStocks";
 
 interface SearchResultProps {
   onAddFavorite: (stock: FavoriteStock) => void;
   favoriteStocks: FavoriteStock[];
+  onDeleteFavorite: (index: number) => void;
 }
 
 export const SearchResult = ({
   onAddFavorite,
   favoriteStocks,
+  onDeleteFavorite,
 }: SearchResultProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -68,13 +70,15 @@ export const SearchResult = ({
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
-        🔍 검색 결과: {query}
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">
+          🔍 검색 결과: {query}
+        </h2>
+      </div>
       {filtered.length === 0 && (
         <p className="text-gray-500">결과가 없습니다.</p>
       )}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mt-4">
         {filtered.map((item: SearchResultDummyItem) => {
           const isFavorite = favoriteStocks.some(
             (stock) => stock.name === item.name
