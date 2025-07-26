@@ -5,8 +5,9 @@ import {
   AI_EMOTIONS,
 } from "./constants/insight.ts";
 import INSIGHT_CONTENTS from './constants/insightContents';
-import ClovaSummary from './ClovaSummary';//hyper-clova 요약을 받기위한 컴포넌트 입니다.반드시 import 해주세요.
-import React, { useState } from 'react';
+import ClovaSummary from './ClovaSummary';
+import React, { useState, useEffect } from 'react';
+import { TOTAL_SCORES } from '../index.tsx';
 
 interface Insight {
   companyName?: string;
@@ -17,57 +18,9 @@ interface Insight {
   score: number;
   date: string;
   source: string;
-  content?: string; // 기사 본문 등
+  content?: string;
 }
 
-const insightData: Insight[] = [
-  {
-    companyName: COMPANY_NAMES.SAMSUNG.name,
-    title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
-    mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
-    subCategories: ["건설", "KRX 300"],
-    aiEmotion: AI_EMOTIONS.POSITIVE,
-    score: 78,
-    date: "2025-07-20",
-    source: "아시아경제",
-    content: INSIGHT_CONTENTS[0],
-  },
-  {
-    title:
-      "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
-    mainCategory: MAIN_CATEGORIES.HEALTHCARE,
-    subCategories: ["바이오"],
-    aiEmotion: AI_EMOTIONS.POSITIVE,
-    score: 65,
-    date: "2024-07-20",
-    source: "해럴드경제",
-    content: INSIGHT_CONTENTS[1],
-  },
-  {
-    title:
-      "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
-    mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
-    subCategories: ["자동차", "자동차부품"],
-    aiEmotion: AI_EMOTIONS.NEGATIVE,
-    score: 82,
-    date: "2024-07-20",
-    source: "서울경제",
-    content: INSIGHT_CONTENTS[2],
-  },
-  {
-    companyName: COMPANY_NAMES.CHIPOLE.name,
-    title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
-    mainCategory: MAIN_CATEGORIES.CONSUMER_STAPLES,
-    subCategories: ["식품"],
-    aiEmotion: AI_EMOTIONS.POSITIVE,
-    score: 73,
-    date: "2024-07-18",
-    source: "연합인포해외",
-    content: INSIGHT_CONTENTS[3],
-  },
-];
-
-// AI 감정에 따른 스타일 맵
 const emotionStyles = {
   긍정적: "bg-[#d2f5c4] text-green-700",
   보류: "bg-[#fff7b2] text-yellow-700",
@@ -119,9 +72,7 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
                 </span>
               )}
             </div>
-            <span
-              className={`text-xs font-medium ${scoreColor(insight.score)}`}
-            >
+            <span className={`text-xs font-medium ${scoreColor(insight.score)}`}>
               AI 점수: {insight.score}/100
             </span>
           </div>
@@ -130,7 +81,10 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
             <div>
               {insight.date} | {insight.source}
             </div>
-            <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={() => onDetail(insight)}>
+            <button
+              className="flex items-center text-blue-600 hover:text-blue-800"
+              onClick={() => onDetail(insight)}
+            >
               <span className="mr-1">자세히</span>
               <ExternalLinkIcon className="h-3 w-3" />
             </button>
@@ -144,11 +98,66 @@ const InsightItem = ({ insight, onDetail }: { insight: Insight, onDetail: (insig
 export const RecentInsights = () => {
   const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
-  const [summary, setSummary] = useState(''); // 요약 결과 상태 추가
+  const [summary, setSummary] = useState('');
+  const [insightData, setInsightData] = useState<Insight[]>([]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (TOTAL_SCORES.some(score => score > 0)) {
+        setInsightData([
+          {
+            companyName: COMPANY_NAMES.SAMSUNG.name,
+            title: "삼성물산, 신정동 1152 재개발 수주…단지명 '목동 래미안 트라메종'",
+            mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
+            subCategories: ["건설", "KRX 300"],
+            aiEmotion: AI_EMOTIONS.POSITIVE,
+            score: TOTAL_SCORES[0] ?? 0,
+            date: "2025-07-20",
+            source: "아시아경제",
+            content: INSIGHT_CONTENTS[0],
+          },
+          {
+            title: "J&J 실적에 바이오株 반등…트럼프發 관세 타격 없다, 그 이유는?[투자360]",
+            mainCategory: MAIN_CATEGORIES.HEALTHCARE,
+            subCategories: ["바이오"],
+            aiEmotion: AI_EMOTIONS.POSITIVE,
+            score: TOTAL_SCORES[1] ?? 0,
+            date: "2024-07-20",
+            source: "해럴드경제",
+            content: INSIGHT_CONTENTS[1],
+          },
+          {
+            title: "‘타코맨’ 트럼프, 車 관세 높일까?…“25%만 지켜도 자동차株 주가 반등”[투자360]",
+            mainCategory: MAIN_CATEGORIES.AUTOMOTIVE,
+            subCategories: ["자동차", "자동차부품"],
+            aiEmotion: AI_EMOTIONS.NEGATIVE,
+            score: TOTAL_SCORES[2] ?? 0,
+            date: "2024-07-20",
+            source: "서울경제",
+            content: INSIGHT_CONTENTS[2],
+          },
+          {
+            companyName: COMPANY_NAMES.CHIPOLE.name,
+            title: "치폴레(CMG), 하반기 성장세 가속 기대돼 -BMO",
+            mainCategory: MAIN_CATEGORIES.CONSUMER_STAPLES,
+            subCategories: ["식품"],
+            aiEmotion: AI_EMOTIONS.POSITIVE,
+            score: TOTAL_SCORES[3] ?? 0,
+            date: "2024-07-18",
+            source: "연합인포해외",
+            content: INSIGHT_CONTENTS[3],
+          },
+        ]);
+        clearInterval(interval);
+      }
+    }, 300); // 300ms마다 TOTAL_SCORES 체크
+  
+    return () => clearInterval(interval);
+  }, []);
 
   const handleDetail = (insight: Insight) => {
     setSelectedInsight(insight);
-    setSummary(''); // 새 인사이트 클릭 시 요약 결과 초기화
+    setSummary('');
   };
 
   const closeModal = () => setSelectedInsight(null);
@@ -182,9 +191,9 @@ export const RecentInsights = () => {
           <div style={{ background: 'white', borderRadius: 8, minWidth: 350, maxWidth: 500, padding: 24 }} onClick={e => e.stopPropagation()}>
             <button style={{ float: 'right', fontSize: 18, marginBottom: 8 }} onClick={closeModal}>X</button>
             <ClovaSummary text={selectedInsight.content || selectedInsight.title} onSummary={setSummary} />
-            <div style={{marginTop: 16}}>
+            <div style={{ marginTop: 16 }}>
               <h4>AI 요약 결과</h4>
-              <pre style={{whiteSpace: 'pre-wrap'}}>{summary || '요약 결과 없음'}</pre>
+              <pre style={{ whiteSpace: 'pre-wrap' }}>{summary || '요약 결과 없음'}</pre>
             </div>
           </div>
         </div>
