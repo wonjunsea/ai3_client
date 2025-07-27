@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { SearchResult } from "./pages/SearchPage";
-import { DetailPage } from "./pages/ResultPage";
+import { ResultPage } from "./pages/ResultPage";
 import { Dashboard } from "./components/MainPage";
 import { useState } from "react";
 import { FavoriteStock } from "./components/FavoriteStocks";
@@ -51,7 +51,7 @@ export function App() {
                   />
                 }
               />
-              <Route path="/detail/:id" element={<DetailPage />} />
+              <Route path="/detail/:id" element={<ResultPage />} />
             </Routes>
           </div>
         </BrowserRouter>
