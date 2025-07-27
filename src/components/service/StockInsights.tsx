@@ -6,13 +6,12 @@ interface ClovaSummaryProps {
   onSummary?: (result: string) => void;
 }
 
-//각각 100점 넘게 나올때가 있어서 min사용해 가중치 조정했습니다.
-//1.긍부정 점수 추출{20점}
+// 1. 긍부정 점수 추출 {20점}
 export const getPosNegScore = async (
   positive: number,
   negative: number
 ): Promise<number> => {
-  const res = await axios.post("http://localhost:4000/api/clova-summary", {
+  const res = await axios.post("https://ai3-server.onrender.com/api/clova-summary", {
     messages: [
       {
         role: "system",
@@ -25,14 +24,14 @@ export const getPosNegScore = async (
     ],
   });
   const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
-  return Math.min(score, 20); // 최대 20점으로 제한
+  return Math.min(score, 20);
 };
 
-//2.분석가 의견 점수 추출{40점}
+// 2. 분석가 의견 점수 추출 {40점}
 export const getAnalystScore = async (
   analystRating: number
 ): Promise<number> => {
-  const res = await axios.post("http://localhost:4000/api/clova-summary", {
+  const res = await axios.post("https://ai3-server.onrender.com/api/clova-summary", {
     messages: [
       {
         role: "system",
@@ -45,12 +44,12 @@ export const getAnalystScore = async (
     ],
   });
   const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
-  return Math.min(score, 40); // 최대 40점으로 제한
+  return Math.min(score, 40);
 };
 
-//3.뉴스 요약 점수 추출 {40점}
+// 3. 뉴스 요약 점수 추출 {40점}
 export const getNewsScore = async (newsSummary: string): Promise<number> => {
-  const res = await axios.post("http://localhost:4000/api/clova-summary", {
+  const res = await axios.post("https://ai3-server.onrender.com/api/clova-summary", {
     messages: [
       {
         role: "system",
@@ -63,10 +62,10 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
     ],
   });
   const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
-  return Math.min(score, 40); // 최대 40점으로 제한
+  return Math.min(score, 40);
 };
 
-//4.현재 뉴스 요약 텍스트-> RecentInsights.tsx에서만 사용됩니다! + 반환값은 요약 텍스트입니다.
+// 4. 뉴스 요약 텍스트 추출
 export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
@@ -74,7 +73,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
   const callClova = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:4000/api/clova-summary", {
+      const res = await axios.post("https://ai3-server.onrender.com/api/clova-summary", {
         messages: [
           {
             role: "system",
@@ -84,7 +83,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
               "- 반드시 아래 형식을 따르세요:\n" +
               "1. 결론을 한문장으로 요약해서 먼저 제시해주세요\n" +
               "2. 전체 내용을 3문단으로 요약해 주세요." +
-              "- 반드시 위 순서와 형식을 유지할 것\n"
+              "- 반드시 위 순서와 형식을 유지할 것\n",
           },
           {
             role: "user",
