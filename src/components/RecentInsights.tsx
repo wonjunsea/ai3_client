@@ -5,7 +5,7 @@ import {
   AI_EMOTIONS,
 } from "./constants/insight.ts";
 import INSIGHT_CONTENTS from "./constants/insightContents";
-import ClovaSummary from "./service/ClovaSummary.tsx";
+import ClovaSummary from "./service/StockInsights";
 import { useState, useEffect } from "react";
 import { TOTAL_SCORES } from "../index.tsx"; //이게 최종 점수입니다.
 
@@ -27,10 +27,10 @@ const emotionStyles = {
   부정적: "bg-[#ffd6d6] text-red-600",
 };
 
-const scoreColor = (score: number) => {
-  if (score >= 75) return "text-green-600";
-  if (score >= 60) return "text-blue-600";
-  return "text-red-600";
+const getEmotionFromScore = (score: number) => {
+  if (score >= 75) return "긍정적";
+  if (score >= 60) return "보류";
+  return "부정적";
 };
 
 const InsightItem = ({
@@ -47,55 +47,75 @@ const InsightItem = ({
           <FileTextIcon className="h-5 w-5 text-blue-600" />
         </div>
         <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 mb-1 flex-nowrap">
-              <span className="text-xs px-2 py-1 bg-[#e2ebf0] rounded-full text-gray-600">
-                {insight.mainCategory}
-              </span>
-              {insight.subCategories.map((sub, idx) => (
-                <span
-                  key={idx}
-                  className="text-xs px-2 py-1 bg-[#c2e9fb] rounded-full text-blue-600"
-                >
-                  {sub}
-                </span>
-              ))}
-              {insight.companyName && (
-                <span className="text-xs px-2 py-1 bg-[#ffe0b2] rounded-full text-orange-700">
-                  {insight.companyName}
-                </span>
-              )}
-              {insight.aiEmotion && (
-                <span
-                  className={`px-3 py-1 rounded-full ml-1 text-xs font-bold ${
-                    emotionStyles[
-                      insight.aiEmotion as keyof typeof emotionStyles
-                    ] ?? "bg-gray-200 text-gray-700"
-                  }`}
-                  style={{ display: "inline-block" }}
-                >
-                  {insight.aiEmotion}
-                </span>
-              )}
-            </div>
-            <span
-              className={`text-xs font-medium ${scoreColor(insight.score)}`}
-            >
-              AI 점수: {insight.score}/100
+          <div className="flex items-center gap-1 mb-2">
+            <span className="text-xs px-1.5 py-0.5 bg-[#e2ebf0] rounded-full text-gray-600 ">
+              {insight.mainCategory}
             </span>
+            {insight.subCategories.slice(0, 2).map((sub, idx) => (
+              <span
+                key={idx}
+                className="text-xs px-1.5 py-0.5 bg-[#c2e9fb] rounded-full text-blue-600"
+              >
+                {sub}
+              </span>
+            ))}
+            {insight.subCategories.length > 2 && (
+              <span className="text-xs px-1.5 py-0.5 bg-[#c2e9fb] rounded-full text-blue-600">
+                +{insight.subCategories.length - 2}
+              </span>
+            )}
+            {insight.companyName && (
+              <span className="text-xs px-1.5 py-0.5 bg-[#ffe0b2] rounded-full text-orange-700">
+                {insight.companyName}
+              </span>
+            )}
+            {insight.aiEmotion && (
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                  emotionStyles[
+                    insight.aiEmotion as keyof typeof emotionStyles
+                  ] ?? "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {insight.aiEmotion}
+              </span>
+            )}
           </div>
           <h4 className="font-medium mt-2">{insight.title}</h4>
           <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
             <div>
               {insight.date} | {insight.source}
             </div>
-            <button
-              className="flex items-center text-blue-600 hover:text-blue-800"
-              onClick={() => onDetail(insight)}
-            >
-              <span className="mr-1">자세히</span>
-              <ExternalLinkIcon className="h-3 w-3" />
-            </button>
+            <div className="flex items-center gap-2">
+              <span
+                className={`text-sm font-medium px-2 py-1 rounded-full ${
+                  insight.score === 0 
+                    ? "bg-blue-50 text-blue-600" 
+                    : emotionStyles[
+                        getEmotionFromScore(insight.score) as keyof typeof emotionStyles
+                      ] ?? "text-gray-600"
+                }`}
+              >
+                {insight.score === 0 ? (
+                  <span className="flex items-center gap-1">
+                    <svg className="animate-spin h-3 w-3 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    분석 중...
+                  </span>
+                ) : (
+                  `AI 점수: ${Math.round(insight.score)}`
+                )}
+              </span>
+              <button
+                className="flex items-center text-blue-600 hover:text-blue-800"
+                onClick={() => onDetail(insight)}
+              >
+                <span className="mr-1">자세히</span>
+                <ExternalLinkIcon className="h-3 w-3" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -104,10 +124,9 @@ const InsightItem = ({
 };
 
 export const RecentInsights = () => {
-  const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   const [summary, setSummary] = useState("");
-  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
+  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]);
   const [insightData, setInsightData] = useState<Insight[]>([
     {
       companyName: COMPANY_NAMES.SAMSUNG.name,
@@ -115,7 +134,7 @@ export const RecentInsights = () => {
       mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
       subCategories: ["건설", "KRX 300"],
       aiEmotion: AI_EMOTIONS.POSITIVE,
-      score: 0, // 점수는 이후에 scores로 치환
+      score: 0,
       date: "2025-07-20",
       source: "아시아경제",
       content: INSIGHT_CONTENTS[0],
@@ -156,10 +175,9 @@ export const RecentInsights = () => {
   ]);
 
   useEffect(() => {
-    // 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
       if (TOTAL_SCORES.some((score) => score > 0)) {
-        setScores([...TOTAL_SCORES]); // 업데이트된 점수 복사
+        setScores([...TOTAL_SCORES]);
         clearInterval(interval);
       }
     }, 300);
@@ -178,12 +196,6 @@ export const RecentInsights = () => {
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-lg font-bold text-gray-800">최근 인사이트</h3>
         <div className="flex space-x-2">
-          <select className="px-3 py-1 border rounded-md text-sm">
-            <option>모든 카테고리</option>
-            {categories.map((cat, idx) => (
-              <option key={idx}>{cat}</option>
-            ))}
-          </select>
           <button className="text-blue-600 text-sm font-medium hover:text-blue-800">
             더 보기
           </button>
@@ -194,7 +206,7 @@ export const RecentInsights = () => {
         {insightData.map((insight, index) => (
           <InsightItem
             key={index}
-            insight={{ ...insight, score: scores[index] ?? 0 }} //점수만 동적으로 적용
+            insight={{ ...insight, score: scores[index] ?? 0 }}
             onDetail={handleDetail}
           />
         ))}
