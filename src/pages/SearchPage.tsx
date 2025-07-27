@@ -40,6 +40,7 @@ export const SearchResult = ({
     try {
       setLoadingMessage("투자자들의 긍정/부정 평가를 반영 중입니다...");
       const userScore = await getPosNegScore(item.positive, item.negative);
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
 
       setLoadingMessage(
         "전문 애널리스트의 뉴스 영향력 평가를 반영 중입니다..."

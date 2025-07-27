@@ -50,5 +50,8 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
       },
     ],
   });
-  return parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  const score = parseInt(
+    res.data.result.message.content.match(/\d+/)?.[0] || "0"
+  );
+  return Math.min(score, 40);
 };
