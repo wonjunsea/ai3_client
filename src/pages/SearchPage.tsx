@@ -87,7 +87,7 @@ export const SearchResult = ({
             >
               <div className="cursor-pointer" onClick={() => handleClick(item)}>
                 <p className="text-lg font-semibold text-gray-700">
-                  {item.name}
+                  {item.name} AI 분석 맡기기
                 </p>
               </div>
               <button
