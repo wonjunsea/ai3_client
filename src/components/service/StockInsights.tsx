@@ -27,6 +27,7 @@ export const getPosNegScore = async (
   const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
   return Math.min(score, 20); // 최대 20점으로 제한
 };
+
 //2.분석가 의견 점수 추출{40점}
 export const getAnalystScore = async (
   analystRating: number
@@ -68,7 +69,6 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
 //4.현재 뉴스 요약 텍스트-> RecentInsights.tsx에서만 사용됩니다! + 반환값은 요약 텍스트입니다.
 export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
   const [summary, setSummary] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const callClova = async () => {
@@ -123,7 +123,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
         </div>
         <h2 className="text-xl font-bold text-gray-800">AI 뉴스 요약</h2>
       </div>
-      
+
       {loading && (
         <div className="flex items-center gap-2 text-blue-600 mb-4">
           <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -133,7 +133,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
           <span className="font-medium">AI가 뉴스를 분석하고 있습니다...</span>
         </div>
       )}
-      
+
       {!text && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
           <div className="flex items-center gap-2 text-red-600">
@@ -144,7 +144,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
           </div>
         </div>
       )}
-      
+
       {summary && (
         <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
           <div className="prose prose-sm max-w-none">
