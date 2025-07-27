@@ -5,7 +5,12 @@ import { LoadingSplash } from "./LoadingPage";
 import { Articles, articleData } from "../components/constants/articles";
 
 import { FavoriteStock } from "../components/FavoriteStocks";
-import { StockScores } from "../components/service/StockInsights";
+import {
+  getAnalystScore,
+  getNewsScore,
+  getPosNegScore,
+  StockScores,
+} from "../components/service/StockInsights";
 
 interface SearchResultProps {
   onAddFavorite: (stock: FavoriteStock) => void;
@@ -34,16 +39,24 @@ export const SearchResult = ({
     setLoadingMessage("AI가 뉴스를 분석하고 있습니다...");
 
     try {
-      // 점수 분석 시작
-      setLoadingMessage("감정 점수를 계산하고 있습니다...");
-      const score = await StockScores(item);
+      setLoadingMessage("투자자들의 긍정/부정 평가를 반영 중입니다...");
+      const userScore = await getPosNegScore(item.positive, item.negative);
+
+      setLoadingMessage(
+        "전문 애널리스트의 뉴스 영향력 평가를 반영 중입니다..."
+      );
+      const analScore = await getAnalystScore(item.analystRating);
+
+      setLoadingMessage("기업 영향도와 시장 반응 패턴을 분석 중입니다...");
+      const influenceScore = await getNewsScore(item.newsSummary);
 
       // DetailPage로 결과 전달
       navigate(`/detail/${item.id}`, {
         state: {
           name: item.name,
-          newsText: item.newsSummary,
-          score,
+          analScore,
+          userScore,
+          influenceScore,
         },
       });
     } catch (error) {
