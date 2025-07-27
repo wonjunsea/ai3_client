@@ -35,7 +35,7 @@ export const ResultPage = () => {
     }
 
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg ">
+      <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl  ">
         {/* 상단 주식 정보 헤더 */}
 
         <div className="flex justify-between items-start">
