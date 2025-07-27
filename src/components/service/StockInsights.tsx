@@ -110,7 +110,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
   };
 
   useEffect(() => {
-    if (text && text.length > 5) {
+    if (text && text.length > 5) {//ㅇㅇㅇ
       callClova();
     }
   }, [text]);
