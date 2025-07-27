@@ -39,18 +39,18 @@ export const SearchResult = ({
 
     try {
       setLoadingMessage("투자자들의 긍정/부정 평가를 반영 중입니다...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const userScore = await getPosNegScore(item.positive, item.negative);
 
-      setLoadingMessage(
-        "전문 애널리스트의 뉴스 영향력 평가를 반영 중입니다..."
-      );
+      setLoadingMessage("애널리스트의 뉴스 영향력 평가를 반영 중입니다...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const analScore = await getAnalystScore(item.analystRating);
 
       setLoadingMessage("기업 영향도와 시장 반응 패턴을 분석 중입니다...");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       const influenceScore = await getNewsScore(item.newsSummary);
 
-      // DetailPage로 결과 전달
-      navigate(`/detail/${item.id}`, {
+      navigate(`/result/${item.id}`, {
         state: {
           name: item.name,
           analScore,
@@ -73,9 +73,7 @@ export const SearchResult = ({
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">
-          🔍 검색 결과: {query}
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-800">{query} 검색 결과</h2>
       </div>
       {filtered.length === 0 && (
         <p className="text-gray-500">결과가 없습니다.</p>
@@ -92,7 +90,7 @@ export const SearchResult = ({
             >
               <div className="cursor-pointer" onClick={() => handleClick(item)}>
                 <p className="text-lg font-semibold text-gray-700">
-                  {item.name}
+                  {item.name} AI 분석 맡기기
                 </p>
               </div>
               <button
