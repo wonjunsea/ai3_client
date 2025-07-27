@@ -89,6 +89,7 @@ const InsightItem = ({
             <div className="flex items-center gap-2">
               <span
                 className={`text-sm font-medium px-2 py-1 rounded-full ${
+<<<<<<< wonjunseo
                   insight.score === 0 
                     ? "bg-blue-50 text-blue-600" 
                     : emotionStyles[
