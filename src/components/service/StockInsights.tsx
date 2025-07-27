@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Articles } from "../constants/articles";
 
 export const getPosNegScore = async (
   positive: number,
