@@ -80,8 +80,7 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
               "- 반드시 아래 형식을 따르세요:\n" +
               "1. 결론을 한문장으로 요약해서 먼저 제시해주세요\n" +
               "2. 전체 내용을 3문단으로 요약해 주세요." +
-              "- 반드시 위 순서와 형식을 유지할 것\n" +
-              "- 예시:결론 한 문장\n문단 1\n문단 2\n문단 3",
+              "- 반드시 위 순서와 형식을 유지할 것\n"
           },
           {
             role: "user",
@@ -104,7 +103,6 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
     setLoading(false);
   };
 
-  // 👇 text가 변경될 때마다 요약 실행
   useEffect(() => {
     if (text && text.length > 5) {
       callClova();
