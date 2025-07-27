@@ -53,10 +53,3 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
   });
   return parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
 };
-
-export const StockScores = async (item: Articles): Promise<number> => {
-  const posNegScore = await getPosNegScore(item.positive, item.negative);
-  const analystScore = await getAnalystScore(item.analystRating);
-  const newsScore = await getNewsScore(item.newsSummary);
-  return Math.min(posNegScore + analystScore + newsScore, 100);
-};

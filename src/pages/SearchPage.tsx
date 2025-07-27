@@ -9,7 +9,6 @@ import {
   getAnalystScore,
   getNewsScore,
   getPosNegScore,
-  StockScores,
 } from "../components/service/StockInsights";
 
 interface SearchResultProps {
