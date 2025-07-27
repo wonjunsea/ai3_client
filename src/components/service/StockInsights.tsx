@@ -29,7 +29,7 @@ export const getPosNegScore = async (
 
 // 2. 분석가 의견 점수 추출 {40점}
 export const getAnalystScore = async (
-  analystRating: number
+  analystRating: number // 애널릿 8 -> 40점만점
 ): Promise<number> => {
   const res = await axios.post("https://ai3-server.onrender.com/api/clova-summary", {
     messages: [
@@ -61,7 +61,10 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
       },
     ],
   });
-  const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+
+  const score = parseInt(
+    res.data.result.message.content.match(/\d+/)?.[0] || "0"
+  );
   return Math.min(score, 40);
 };
 

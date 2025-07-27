@@ -1,14 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { SearchResult } from "./pages/SearchPage";
-import { DetailPage } from "./pages/ResultPage";
+import { ResultPage } from "./pages/ResultPage";
 import { Dashboard } from "./components/MainPage";
 import { useState } from "react";
 import { FavoriteStock } from "./components/FavoriteStocks";
 
 export function App() {
   const [favoriteStocks, setFavoriteStocks] = useState<FavoriteStock[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleAddFavorite = (stock: FavoriteStock) => {
     setFavoriteStocks((prev) => {
@@ -19,10 +18,6 @@ export function App() {
 
   const handleDeleteFavorite = (index: number) => {
     setFavoriteStocks((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleEditToggle = () => {
-    setIsEditing((prev) => !prev);
   };
 
   return (
@@ -51,7 +46,7 @@ export function App() {
                   />
                 }
               />
-              <Route path="/detail/:id" element={<DetailPage />} />
+              <Route path="/result/:id" element={<ResultPage />} />
             </Routes>
           </div>
         </BrowserRouter>
