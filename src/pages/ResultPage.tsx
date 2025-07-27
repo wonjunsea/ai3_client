@@ -26,16 +26,6 @@ export const DetailPage = () => {
               : "분석 중..."}
           </div>
         </div>
-
-        {/* 요약 표시 */}
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-3">📝 AI 요약</h3>
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <pre className="whitespace-pre-wrap text-gray-700 leading-relaxed">
-              {state.summary || "요약을 불러오는 중..."}
-            </pre>
-          </div>
-        </div>
       </div>
     );
   }
