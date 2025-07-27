@@ -73,9 +73,7 @@ export const SearchResult = ({
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">
-          🔍 검색 결과: {query}
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-800">{query} 검색 결과</h2>
       </div>
       {filtered.length === 0 && (
         <p className="text-gray-500">결과가 없습니다.</p>

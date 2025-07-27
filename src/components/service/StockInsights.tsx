@@ -20,7 +20,7 @@ export const getPosNegScore = async (
 };
 
 export const getAnalystScore = async (
-  analystRating: number
+  analystRating: number // 애널릿 8 -> 40점만점
 ): Promise<number> => {
   const res = await axios.post("http://localhost:4000/api/clova-summary", {
     messages: [
