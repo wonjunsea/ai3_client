@@ -81,7 +81,7 @@ const InsightItem = ({
             <span
               className={`text-xs font-medium ${scoreColor(insight.score)}`}
             >
-              AI 점수: {insight.score}/100
+              AI 점수: {insight.score}
             </span>
           </div>
           <h4 className="font-medium mt-2">{insight.title}</h4>
@@ -104,7 +104,6 @@ const InsightItem = ({
 };
 
 export const RecentInsights = () => {
-  const categories = Object.values(MAIN_CATEGORIES);
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   const [summary, setSummary] = useState("");
   const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
@@ -178,12 +177,6 @@ export const RecentInsights = () => {
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-lg font-bold text-gray-800">최근 인사이트</h3>
         <div className="flex space-x-2">
-          <select className="px-3 py-1 border rounded-md text-sm">
-            <option>모든 카테고리</option>
-            {categories.map((cat, idx) => (
-              <option key={idx}>{cat}</option>
-            ))}
-          </select>
           <button className="text-blue-600 text-sm font-medium hover:text-blue-800">
             더 보기
           </button>
