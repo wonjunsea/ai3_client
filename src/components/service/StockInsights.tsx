@@ -6,6 +6,7 @@ interface ClovaSummaryProps {
   onSummary?: (result: string) => void;
 }
 
+//각각 100점 넘게 나올때가 있어서 min사용해 가중치 조정했습니다.
 //1.긍부정 점수 추출{20점}
 export const getPosNegScore = async (
   positive: number,
@@ -23,7 +24,8 @@ export const getPosNegScore = async (
       },
     ],
   });
-  return parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  return Math.min(score, 20); // 최대 20점으로 제한
 };
 //2.분석가 의견 점수 추출{40점}
 export const getAnalystScore = async (
@@ -41,7 +43,8 @@ export const getAnalystScore = async (
       },
     ],
   });
-  return parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  return Math.min(score, 40); // 최대 40점으로 제한
 };
 
 //3.뉴스 요약 점수 추출 {40점}
@@ -58,7 +61,8 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
       },
     ],
   });
-  return parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
+  return Math.min(score, 40); // 최대 40점으로 제한
 };
 
 //4.현재 뉴스 요약 텍스트-> RecentInsights.tsx에서만 사용됩니다! + 반환값은 요약 텍스트입니다.
@@ -110,15 +114,46 @@ export default function ClovaSummary({ text, onSummary }: ClovaSummaryProps) {
   }, [text]);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>뉴스 요약 결과</h2>
-      {loading && <div>요약 중...</div>}
-      {!text && (
-        <div style={{ color: "red", marginTop: 8 }}>
-          요약할 텍스트가 없습니다.
+    <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-bold text-gray-800">AI 뉴스 요약</h2>
+      </div>
+      
+      {loading && (
+        <div className="flex items-center gap-2 text-blue-600 mb-4">
+          <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span className="font-medium">AI가 뉴스를 분석하고 있습니다...</span>
         </div>
       )}
-      <pre style={{ whiteSpace: "pre-wrap", marginTop: "1em" }}>{summary}</pre>
+      
+      {!text && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+          <div className="flex items-center gap-2 text-red-600">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium">요약할 텍스트가 없습니다.</span>
+          </div>
+        </div>
+      )}
+      
+      {summary && (
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
+          <div className="prose prose-sm max-w-none">
+            <div className="whitespace-pre-wrap text-gray-700 leading-relaxed text-sm">
+              {summary}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

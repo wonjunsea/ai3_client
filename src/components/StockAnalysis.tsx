@@ -102,9 +102,9 @@ export const StockAnalysis = () => {
   }, []);
   return (
     <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-base font-bold text-gray-800">주식 AI 분석</h3>
-        <button className="text-blue-600 text-xs font-medium hover:text-blue-800">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-lg font-bold text-gray-800">주식 AI 분석</h3>
+        <button className="text-blue-600 text-sm font-medium hover:text-blue-800">
           전체보기
         </button>
       </div>
@@ -136,10 +136,10 @@ export const StockAnalysis = () => {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-gray-900 text-sm">
+                <span className="font-bold text-gray-900 text-sm bg-blue-50 px-2 py-1 rounded">
                   {stock.name}
                 </span>
-                <span className="text-xs text-gray-500">{stock.code}</span>
+                <span className="text-xs text-gray-500 bg-gray-50 px-1 py-0.5 rounded">{stock.code}</span>
                 <span
                   className={`flex items-center ml-2 text-xs font-semibold ${
                     stock.trend === "up" ? "text-green-600" : "text-red-600"
