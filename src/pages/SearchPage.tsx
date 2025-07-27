@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { LoadingSplash } from "./LoadingPage";
+
+import { Articles, articleData } from "../components/constants/articles";
+
+import { FavoriteStock } from "../components/FavoriteStocks";
 import {
-  callClovaScoreOnly,
-  getClovaSummaryText,
-} from "../components/service/ClovaSummary";
-import {
-  dummyData,
-  SearchResultDummyItem,
-} from "../components/constants/searchResultDummyData";
-import { FavoriteStock, FavoriteStocks } from "../components/FavoriteStocks";
+  getAnalystScore,
+  getNewsScore,
+  getPosNegScore,
+} from "../components/service/StockInsights";
 
 interface SearchResultProps {
   onAddFavorite: (stock: FavoriteStock) => void;
@@ -20,40 +20,42 @@ interface SearchResultProps {
 export const SearchResult = ({
   onAddFavorite,
   favoriteStocks,
-  onDeleteFavorite,
 }: SearchResultProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const query = params.get("query");
 
-  const filtered = dummyData.filter((item: SearchResultDummyItem) =>
+  const filtered = articleData.filter((item: Articles) =>
     item.name.includes(query || "")
   );
 
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
 
-  const handleClick = async (item: SearchResultDummyItem) => {
+  const handleClick = async (item: Articles) => {
     setLoading(true);
     setLoadingMessage("AI가 뉴스를 분석하고 있습니다...");
 
     try {
-      // 점수 분석 시작
-      setLoadingMessage("감정 점수를 계산하고 있습니다...");
-      const score = await callClovaScoreOnly(item.newsText);
+      setLoadingMessage("투자자들의 긍정/부정 평가를 반영 중입니다...");
+      const userScore = await getPosNegScore(item.positive, item.negative);
 
-      // 요약 분석 시작
-      setLoadingMessage("뉴스 내용을 요약하고 있습니다...");
-      const summary = await getClovaSummaryText(item.newsText);
+      setLoadingMessage(
+        "전문 애널리스트의 뉴스 영향력 평가를 반영 중입니다..."
+      );
+      const analScore = await getAnalystScore(item.analystRating);
+
+      setLoadingMessage("기업 영향도와 시장 반응 패턴을 분석 중입니다...");
+      const influenceScore = await getNewsScore(item.newsSummary);
 
       // DetailPage로 결과 전달
       navigate(`/detail/${item.id}`, {
         state: {
           name: item.name,
-          newsText: item.newsText,
-          score,
-          summary,
+          analScore,
+          userScore,
+          influenceScore,
         },
       });
     } catch (error) {
@@ -79,7 +81,7 @@ export const SearchResult = ({
         <p className="text-gray-500">결과가 없습니다.</p>
       )}
       <div className="flex flex-col gap-4 mt-4">
-        {filtered.map((item: SearchResultDummyItem) => {
+        {filtered.map((item: Articles) => {
           const isFavorite = favoriteStocks.some(
             (stock) => stock.name === item.name
           );
