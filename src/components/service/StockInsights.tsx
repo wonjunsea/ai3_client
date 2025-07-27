@@ -30,7 +30,7 @@ export const getPosNegScore = async (
 
 //2.분석가 의견 점수 추출{40점}
 export const getAnalystScore = async (
-  analystRating: number
+  analystRating: number // 애널릿 8 -> 40점만점
 ): Promise<number> => {
   const res = await axios.post("http://localhost:4000/api/clova-summary", {
     messages: [
@@ -62,8 +62,11 @@ export const getNewsScore = async (newsSummary: string): Promise<number> => {
       },
     ],
   });
-  const score = parseInt(res.data.result.message.content.match(/\d+/)?.[0] || "0");
-  return Math.min(score, 40); // 최대 40점으로 제한
+
+  const score = parseInt(
+    res.data.result.message.content.match(/\d+/)?.[0] || "0"
+  );
+  return Math.min(score, 40);
 };
 
 //4.현재 뉴스 요약 텍스트-> RecentInsights.tsx에서만 사용됩니다! + 반환값은 요약 텍스트입니다.

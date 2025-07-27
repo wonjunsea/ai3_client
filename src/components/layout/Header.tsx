@@ -1,9 +1,11 @@
 import { SearchIcon, BellIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { articleData } from "../constants/articles";
 
 export const Header = () => {
   const [keyword, setKeyword] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,9 +36,27 @@ export const Header = () => {
               placeholder="검색..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
               className="py-1.5 pl-9 pr-3 text-sm border rounded-full w-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
             />
             <SearchIcon className="absolute left-2 top-2 h-4 w-4 text-gray-400" />
+            {showSuggestions && (
+              <ul className="absolute mt-1 w-full bg-white border border-gray-200 rounded shadow-md z-30">
+                {articleData.map((article) => (
+                  <li
+                    key={article.id}
+                    className="px-3 py-1 hover:bg-gray-100 cursor-pointer text-sm"
+                    onMouseDown={() => {
+                      setKeyword(article.name);
+                      navigate(`/search?query=${encodeURIComponent(article.name)}`);
+                    }}
+                  >
+                    {article.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
           <button
             type="submit"
