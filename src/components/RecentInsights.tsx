@@ -5,7 +5,7 @@ import {
   AI_EMOTIONS,
 } from "./constants/insight.ts";
 import INSIGHT_CONTENTS from "./constants/insightContents";
-import ClovaSummary from "./service/ClovaSummary.tsx";
+import ClovaSummary from "./service/StockInsights";
 import { useState, useEffect } from "react";
 import { TOTAL_SCORES } from "../index.tsx"; //이게 최종 점수입니다.
 
@@ -89,12 +89,24 @@ const InsightItem = ({
             <div className="flex items-center gap-2">
               <span
                 className={`text-sm font-medium px-2 py-1 rounded-full ${
-                  emotionStyles[
-                    getEmotionFromScore(insight.score) as keyof typeof emotionStyles
-                  ] ?? "text-gray-600"
+                  insight.score === 0 
+                    ? "bg-blue-50 text-blue-600" 
+                    : emotionStyles[
+                        getEmotionFromScore(insight.score) as keyof typeof emotionStyles
+                      ] ?? "text-gray-600"
                 }`}
               >
-                AI 점수: {Math.round(insight.score)}
+                {insight.score === 0 ? (
+                  <span className="flex items-center gap-1">
+                    <svg className="animate-spin h-3 w-3 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    분석 중...
+                  </span>
+                ) : (
+                  `AI 점수: ${Math.round(insight.score)}`
+                )}
               </span>
               <button
                 className="flex items-center text-blue-600 hover:text-blue-800"
@@ -114,7 +126,7 @@ const InsightItem = ({
 export const RecentInsights = () => {
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   const [summary, setSummary] = useState("");
-  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
+  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]);
   const [insightData, setInsightData] = useState<Insight[]>([
     {
       companyName: COMPANY_NAMES.SAMSUNG.name,
@@ -122,7 +134,7 @@ export const RecentInsights = () => {
       mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
       subCategories: ["건설", "KRX 300"],
       aiEmotion: AI_EMOTIONS.POSITIVE,
-      score: 0, // 점수는 이후에 scores로 치환
+      score: 0,
       date: "2025-07-20",
       source: "아시아경제",
       content: INSIGHT_CONTENTS[0],
@@ -163,10 +175,9 @@ export const RecentInsights = () => {
   ]);
 
   useEffect(() => {
-    // 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
       if (TOTAL_SCORES.some((score) => score > 0)) {
-        setScores([...TOTAL_SCORES]); // 업데이트된 점수 복사
+        setScores([...TOTAL_SCORES]);
         clearInterval(interval);
       }
     }, 300);
@@ -195,7 +206,7 @@ export const RecentInsights = () => {
         {insightData.map((insight, index) => (
           <InsightItem
             key={index}
-            insight={{ ...insight, score: scores[index] ?? 0 }} //점수만 동적으로 적용
+            insight={{ ...insight, score: scores[index] ?? 0 }}
             onDetail={handleDetail}
           />
         ))}

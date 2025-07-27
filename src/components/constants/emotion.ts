@@ -1,6 +1,6 @@
-export const EMOTIONS: string [] = [//사용자에게 데이터를 받아,3가지의 감정상태로 환산하여 20점 환산하여 사용,일단은 더미데이터터
-    `긍정 80%`,
-    `긍정 75%`,
-    `중립 60%`,
-    `긍정 85%`
+export const EMOTIONS: { positive: number; negative: number }[] = [ //주어진 함수기준으로 변경하였습니다.
+    { positive: 80, negative: 20 },
+    { positive: 75, negative: 25 },
+    { positive: 60, negative: 40 },
+    { positive: 85, negative: 15 }
 ]
