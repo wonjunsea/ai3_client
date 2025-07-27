@@ -40,18 +40,14 @@ export const SearchResult = ({
     try {
       setLoadingMessage("투자자들의 긍정/부정 평가를 반영 중입니다...");
       const userScore = await getPosNegScore(item.positive, item.negative);
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      setLoadingMessage(
-        "전문 애널리스트의 뉴스 영향력 평가를 반영 중입니다..."
-      );
+      setLoadingMessage("애널리스트의 뉴스 영향력 평가를 반영 중입니다...");
       const analScore = await getAnalystScore(item.analystRating);
 
       setLoadingMessage("기업 영향도와 시장 반응 패턴을 분석 중입니다...");
       const influenceScore = await getNewsScore(item.newsSummary);
 
-      // DetailPage로 결과 전달
-      navigate(`/detail/${item.id}`, {
+      navigate(`/result/${item.id}`, {
         state: {
           name: item.name,
           analScore,

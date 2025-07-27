@@ -8,7 +8,6 @@ import { FavoriteStock } from "./components/FavoriteStocks";
 
 export function App() {
   const [favoriteStocks, setFavoriteStocks] = useState<FavoriteStock[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleAddFavorite = (stock: FavoriteStock) => {
     setFavoriteStocks((prev) => {
@@ -19,10 +18,6 @@ export function App() {
 
   const handleDeleteFavorite = (index: number) => {
     setFavoriteStocks((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleEditToggle = () => {
-    setIsEditing((prev) => !prev);
   };
 
   return (
@@ -51,7 +46,7 @@ export function App() {
                   />
                 }
               />
-              <Route path="/detail/:id" element={<ResultPage />} />
+              <Route path="/result/:id" element={<ResultPage />} />
             </Routes>
           </div>
         </BrowserRouter>
