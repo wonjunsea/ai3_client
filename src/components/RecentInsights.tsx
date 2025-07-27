@@ -89,7 +89,6 @@ const InsightItem = ({
             <div className="flex items-center gap-2">
               <span
                 className={`text-sm font-medium px-2 py-1 rounded-full ${
-<<<<<<< wonjunseo
                   insight.score === 0 
                     ? "bg-blue-50 text-blue-600" 
                     : emotionStyles[
@@ -127,7 +126,7 @@ const InsightItem = ({
 export const RecentInsights = () => {
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
   const [summary, setSummary] = useState("");
-  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]); //점수 상태 추가 맨 처음에는 다 0값
+  const [scores, setScores] = useState<number[]>([0, 0, 0, 0]);
   const [insightData, setInsightData] = useState<Insight[]>([
     {
       companyName: COMPANY_NAMES.SAMSUNG.name,
@@ -135,7 +134,7 @@ export const RecentInsights = () => {
       mainCategory: MAIN_CATEGORIES.INFORMATION_TECHNOLOGY,
       subCategories: ["건설", "KRX 300"],
       aiEmotion: AI_EMOTIONS.POSITIVE,
-      score: 0, // 점수는 이후에 scores로 치환
+      score: 0,
       date: "2025-07-20",
       source: "아시아경제",
       content: INSIGHT_CONTENTS[0],
@@ -176,10 +175,9 @@ export const RecentInsights = () => {
   ]);
 
   useEffect(() => {
-    // 점수만 주기적으로 체크하여 상태 업데이트 ,300ms 마다
     const interval = setInterval(() => {
       if (TOTAL_SCORES.some((score) => score > 0)) {
-        setScores([...TOTAL_SCORES]); // 업데이트된 점수 복사
+        setScores([...TOTAL_SCORES]);
         clearInterval(interval);
       }
     }, 300);
@@ -208,7 +206,7 @@ export const RecentInsights = () => {
         {insightData.map((insight, index) => (
           <InsightItem
             key={index}
-            insight={{ ...insight, score: scores[index] ?? 0 }} //점수만 동적으로 적용
+            insight={{ ...insight, score: scores[index] ?? 0 }}
             onDetail={handleDetail}
           />
         ))}
